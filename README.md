@@ -15,13 +15,13 @@ Main Literatures:
 
 The frontend will be developed in React with Bootstrap
 
-Documentation: https://flask.palletsprojects.com/en/3.0.x/
+Documentation: https://react.dev/ | https://getbootstrap.com/
 
 ## Backend
 
 The backend will be developed in Python using Flask for the API
 
-Documentation: https://react.dev/ | https://getbootstrap.com/
+Documentation: https://flask.palletsprojects.com/en/3.0.x/
 
 ## Database (?)
 
