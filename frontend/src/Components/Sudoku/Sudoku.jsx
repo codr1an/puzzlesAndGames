@@ -16,13 +16,17 @@ const Sudoku = () => {
   ];
 
   const [highlightedCell, setHighlightedCell] = useState(null);
+  const [highlightedValue, setHighlightedValue] = useState(null);
 
   const handleFocus = (rowIndex, colIndex) => {
     setHighlightedCell({ row: rowIndex, col: colIndex });
+    const cellValue = initialBoard[rowIndex][colIndex];
+    setHighlightedValue(cellValue !== 0 ? cellValue : null);
   };
 
   const handleBlur = () => {
     setHighlightedCell(null);
+    setHighlightedValue(null);
   };
 
   const renderBoard = (board) => {
@@ -40,10 +44,15 @@ const Sudoku = () => {
                     Math.floor(colIndex / 3) ===
                       Math.floor(highlightedCell.col / 3)));
 
+              const isSameValue =
+                highlightedValue !== null && cell === highlightedValue;
+
               return (
                 <input
                   key={`${rowIndex}-${colIndex}`}
-                  className={`sudoku-cell ${isHighlighted ? "highlight" : ""}`}
+                  className={`sudoku-cell ${isHighlighted ? "highlight" : ""} ${
+                    isSameValue ? "value-highlight" : ""
+                  }`}
                   type="text"
                   maxLength="1"
                   value={cell !== 0 ? cell : ""}

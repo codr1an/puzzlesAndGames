@@ -81,7 +81,7 @@
 
 .sudoku-cell.highlight,
 .sudoku-cell[readonly].highlight {
-  background-color: rgb(226, 235, 243) !important;
+  background-color: rgb(226, 235, 243);
 }
 
 .sudoku-grid {
@@ -108,7 +108,11 @@
 }
 
 .sudoku-cell:focus {
-  background-color: rgb(187, 222, 251);
+  background-color: rgb(187, 222, 251) !important;
+}
+
+.sudoku-cell.value-highlight {
+  background-color: rgb(187, 222, 251) !important;
 }
 
 .sudoku-cell:nth-child(3n + 1) {
