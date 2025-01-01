@@ -130,3 +130,6 @@
 .sudoku-row > .sudoku-cell:nth-child(9) {
   border-right: 1px solid black;
 }
+.sudoku-cell.user-added {
+  color: rgb(50, 90, 175);
+}
