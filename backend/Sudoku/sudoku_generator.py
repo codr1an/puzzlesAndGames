@@ -18,12 +18,3 @@ def generate_sudoku():
     grid = [[nums[pattern(r, c)] for c in cols] for r in rows]
 
     return grid
-
-
-def print_sudoku(grid):
-    for row in grid:
-        print(" ".join(str(num) for num in row))
-
-
-sudoku = generate_sudoku()
-print_sudoku(sudoku)
