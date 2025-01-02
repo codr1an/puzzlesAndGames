@@ -1,8 +1,10 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from sudoku_generator import generate_sudoku
 from sudoku_difficulty import remove_numbers
 
 app = Flask(__name__)
+CORS(app)
 
 sudoku = generate_sudoku()
 
@@ -29,7 +31,7 @@ def generate_sudoku_puzzle():
     puzzle = [row[:] for row in sudoku]
     puzzle = remove_numbers(puzzle, difficulty)
 
-    return jsonify({"puzzle": puzzle, "solution": sudoku})
+    return jsonify(puzzle)
 
 
 if __name__ == "__main__":

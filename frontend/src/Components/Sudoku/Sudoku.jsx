@@ -1,23 +1,22 @@
 import "./Sudoku.css";
 import Sidebar from "../Home/Sidebar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Sudoku = () => {
-  const initialBoard = [
-    [5, 3, 0, 0, 7, 0, 0, 0, 0],
-    [6, 0, 0, 1, 9, 5, 0, 0, 0],
-    [0, 9, 8, 0, 0, 0, 0, 6, 0],
-    [8, 0, 0, 0, 6, 0, 0, 0, 3],
-    [4, 0, 0, 8, 0, 3, 0, 0, 1],
-    [7, 0, 0, 0, 2, 0, 0, 0, 6],
-    [0, 6, 0, 0, 0, 0, 2, 8, 0],
-    [0, 0, 0, 4, 1, 9, 0, 0, 5],
-    [0, 0, 0, 0, 8, 0, 0, 7, 9],
-  ];
-
-  const [board, setBoard] = useState(initialBoard);
+  const [board, setBoard] = useState([]);
   const [highlightedCell, setHighlightedCell] = useState(null);
   const [highlightedValue, setHighlightedValue] = useState(null);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/api/sudoku")
+      .then((response) => response.json())
+      .then((data) => {
+        setBoard(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Sudoku board:", error);
+      });
+  }, []);
 
   const handleFocus = (rowIndex, colIndex) => {
     setHighlightedCell({ row: rowIndex, col: colIndex });
@@ -58,9 +57,7 @@ const Sudoku = () => {
               const isSameValue =
                 highlightedValue !== null && cell === highlightedValue;
 
-              const isUserAdded =
-                cell !== 0 &&
-                board[rowIndex][colIndex] !== initialBoard[rowIndex][colIndex];
+              const isUserAdded = cell !== 0 && board[rowIndex][colIndex] !== 0;
 
               return (
                 <input
