@@ -18,6 +18,8 @@ const Sudoku = () => {
       });
   }, []);
 
+  let preventBlur = false;
+
   const handleFocus = (rowIndex, colIndex) => {
     setHighlightedCell({ row: rowIndex, col: colIndex });
     const cellValue = board[rowIndex][colIndex];
@@ -25,8 +27,10 @@ const Sudoku = () => {
   };
 
   const handleBlur = () => {
-    setHighlightedCell(null);
-    setHighlightedValue(null);
+    if (!preventBlur) {
+      setHighlightedCell(null);
+      setHighlightedValue(null);
+    }
   };
 
   const handleChange = (event, rowIndex, colIndex) => {
@@ -35,6 +39,15 @@ const Sudoku = () => {
     if (/^[1-9]$/.test(value)) {
       const newBoard = [...board];
       newBoard[rowIndex][colIndex] = parseInt(value, 10);
+      setBoard(newBoard);
+    }
+  };
+
+  const handleNumpadClick = (value) => {
+    if (highlightedCell) {
+      const { row, col } = highlightedCell;
+      const newBoard = [...board];
+      newBoard[row][col] = parseInt(value, 10);
       setBoard(newBoard);
     }
   };
@@ -103,47 +116,52 @@ const Sudoku = () => {
               <div className="sudoku-board-container">{renderBoard(board)}</div>
               <div className="sudoku-buttons-container">
                 <div className="sudoku-actions-buttons">
-                  <button type="button" className="actions-button">
-                    <i class="bi bi-arrow-counterclockwise"></i>
+                  <button
+                    type="button"
+                    className="actions-button"
+                    onMouseDown={() => (preventBlur = true)}
+                    onMouseUp={() => (preventBlur = false)}
+                  >
+                    <i className="bi bi-arrow-counterclockwise"></i>
                   </button>
-                  <button type="button" className="actions-button">
-                    <i class="bi bi-eraser"></i>
+                  <button
+                    type="button"
+                    className="actions-button"
+                    onMouseDown={() => (preventBlur = true)}
+                    onMouseUp={() => (preventBlur = false)}
+                  >
+                    <i className="bi bi-eraser"></i>
                   </button>
-                  <button type="button" className="actions-button">
-                    <i class="bi bi-lightbulb"></i>
+                  <button
+                    type="button"
+                    className="actions-button"
+                    onMouseDown={() => (preventBlur = true)}
+                    onMouseUp={() => (preventBlur = false)}
+                  >
+                    <i className="bi bi-lightbulb"></i>
                   </button>
-                  <button type="button" className="actions-button">
-                    <i class="bi bi-check2"></i>
+                  <button
+                    type="button"
+                    className="actions-button"
+                    onMouseDown={() => (preventBlur = true)}
+                    onMouseUp={() => (preventBlur = false)}
+                  >
+                    <i className="bi bi-check2"></i>
                   </button>
                 </div>
                 <div className="sudoku-numbers-buttons">
-                  <button type="button" className="numpad-button">
-                    1
-                  </button>
-                  <button type="button" className="numpad-button">
-                    2
-                  </button>
-                  <button type="button" className="numpad-button">
-                    3
-                  </button>
-                  <button type="button" className="numpad-button">
-                    4
-                  </button>
-                  <button type="button" className="numpad-button">
-                    5
-                  </button>
-                  <button type="button" className="numpad-button">
-                    6
-                  </button>
-                  <button type="button" className="numpad-button">
-                    7
-                  </button>
-                  <button type="button" className="numpad-button">
-                    8
-                  </button>
-                  <button type="button" className="numpad-button">
-                    9
-                  </button>
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      className="numpad-button"
+                      onClick={() => handleNumpadClick(num)}
+                      onMouseDown={() => (preventBlur = true)}
+                      onMouseUp={() => (preventBlur = false)}
+                    >
+                      {num}
+                    </button>
+                  ))}
                 </div>
               </div>
             </div>
