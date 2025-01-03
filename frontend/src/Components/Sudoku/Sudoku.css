@@ -44,9 +44,13 @@
 }
 
 .sudoku-buttons-container {
-  background-color: blue;
-  width: 50%;
+  width: 30%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .difficulty-button {
@@ -132,4 +136,45 @@
 }
 .sudoku-cell.user-added {
   color: rgb(50, 90, 175);
+}
+
+.sudoku-actions-buttons {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.sudoku-numbers-buttons {
+  height: 60%;
+  width: 100%;
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.actions-button {
+  border: none;
+  background-color: rgb(226, 235, 243);
+  font-size: xx-large;
+  color: rgb(50, 90, 175);
+  border-radius: 50px;
+  width: 65px;
+  height: 65px;
+}
+
+.numpad-button {
+  width: 95%;
+  height: 95%;
+  border: none;
+  border-radius: 10px;
+  background-color: rgb(226, 235, 243);
+  color: rgb(50, 90, 175);
+  font-size: xx-large;
+}
+
+.actions-button:hover,
+.numpad-button:hover {
+  background-color: rgb(220, 227, 237);
 }

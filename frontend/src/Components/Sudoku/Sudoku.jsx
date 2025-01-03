@@ -101,7 +101,51 @@ const Sudoku = () => {
             </div>
             <div className="sudoku-controls-container">
               <div className="sudoku-board-container">{renderBoard(board)}</div>
-              <div className="sudoku-buttons-container"></div>
+              <div className="sudoku-buttons-container">
+                <div className="sudoku-actions-buttons">
+                  <button type="button" className="actions-button">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                  </button>
+                  <button type="button" className="actions-button">
+                    <i class="bi bi-eraser"></i>
+                  </button>
+                  <button type="button" className="actions-button">
+                    <i class="bi bi-lightbulb"></i>
+                  </button>
+                  <button type="button" className="actions-button">
+                    <i class="bi bi-check2"></i>
+                  </button>
+                </div>
+                <div className="sudoku-numbers-buttons">
+                  <button type="button" className="numpad-button">
+                    1
+                  </button>
+                  <button type="button" className="numpad-button">
+                    2
+                  </button>
+                  <button type="button" className="numpad-button">
+                    3
+                  </button>
+                  <button type="button" className="numpad-button">
+                    4
+                  </button>
+                  <button type="button" className="numpad-button">
+                    5
+                  </button>
+                  <button type="button" className="numpad-button">
+                    6
+                  </button>
+                  <button type="button" className="numpad-button">
+                    7
+                  </button>
+                  <button type="button" className="numpad-button">
+                    8
+                  </button>
+                  <button type="button" className="numpad-button">
+                    9
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
