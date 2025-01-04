@@ -23,7 +23,7 @@
 
 .difficulty-container {
   height: 5%;
-  width: 100%;
+  width: 82%;
   display: flex;
   flex: row;
   gap: 10px;
@@ -141,9 +141,9 @@
 .sudoku-actions-buttons {
   height: 10%;
   width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 30px;
 }
 
 .sudoku-numbers-buttons {
@@ -157,11 +157,12 @@
 .actions-button {
   border: none;
   background-color: rgb(226, 235, 243);
-  font-size: xx-large;
+  font-size: large;
   color: rgb(50, 90, 175);
-  border-radius: 50px;
-  width: 65px;
-  height: 65px;
+  border-radius: 10px;
+  width: 100px;
+  height: 35px;
+  overflow: hidden;
 }
 
 .numpad-button {

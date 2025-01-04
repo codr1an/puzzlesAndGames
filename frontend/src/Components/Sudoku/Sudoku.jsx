@@ -2,6 +2,8 @@ import "./Sudoku.css";
 import Sidebar from "../Home/Sidebar";
 import { useState, useEffect } from "react";
 
+// TODO: add difficulty selection, undo, erase, hint, solve buttons functionalities
+
 const Sudoku = () => {
   const [board, setBoard] = useState([]);
   const [highlightedCell, setHighlightedCell] = useState(null);
@@ -115,40 +117,6 @@ const Sudoku = () => {
             <div className="sudoku-controls-container">
               <div className="sudoku-board-container">{renderBoard(board)}</div>
               <div className="sudoku-buttons-container">
-                <div className="sudoku-actions-buttons">
-                  <button
-                    type="button"
-                    className="actions-button"
-                    onMouseDown={() => (preventBlur = true)}
-                    onMouseUp={() => (preventBlur = false)}
-                  >
-                    <i className="bi bi-arrow-counterclockwise"></i>
-                  </button>
-                  <button
-                    type="button"
-                    className="actions-button"
-                    onMouseDown={() => (preventBlur = true)}
-                    onMouseUp={() => (preventBlur = false)}
-                  >
-                    <i className="bi bi-eraser"></i>
-                  </button>
-                  <button
-                    type="button"
-                    className="actions-button"
-                    onMouseDown={() => (preventBlur = true)}
-                    onMouseUp={() => (preventBlur = false)}
-                  >
-                    <i className="bi bi-lightbulb"></i>
-                  </button>
-                  <button
-                    type="button"
-                    className="actions-button"
-                    onMouseDown={() => (preventBlur = true)}
-                    onMouseUp={() => (preventBlur = false)}
-                  >
-                    <i className="bi bi-check2"></i>
-                  </button>
-                </div>
                 <div className="sudoku-numbers-buttons">
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
                     <button
@@ -162,6 +130,40 @@ const Sudoku = () => {
                       {num}
                     </button>
                   ))}
+                </div>
+                <div className="sudoku-actions-buttons">
+                  <button
+                    type="button"
+                    className="actions-button"
+                    onMouseDown={() => (preventBlur = true)}
+                    onMouseUp={() => (preventBlur = false)}
+                  >
+                    <i className="bi bi-arrow-counterclockwise"> Undo</i>
+                  </button>
+                  <button
+                    type="button"
+                    className="actions-button"
+                    onMouseDown={() => (preventBlur = true)}
+                    onMouseUp={() => (preventBlur = false)}
+                  >
+                    <i className="bi bi-eraser"> Erase</i>
+                  </button>
+                  <button
+                    type="button"
+                    className="actions-button"
+                    onMouseDown={() => (preventBlur = true)}
+                    onMouseUp={() => (preventBlur = false)}
+                  >
+                    <i className="bi bi-lightbulb"> Hint</i>
+                  </button>
+                  <button
+                    type="button"
+                    className="actions-button"
+                    onMouseDown={() => (preventBlur = true)}
+                    onMouseUp={() => (preventBlur = false)}
+                  >
+                    <i className="bi bi-check2"> Solve</i>
+                  </button>
                 </div>
               </div>
             </div>
