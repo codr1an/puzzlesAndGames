@@ -1,19 +1,24 @@
+import { useState, useEffect } from "react";
 import "./Sudoku.css";
 import Sidebar from "../Home/Sidebar";
-import { useState, useEffect } from "react";
-
-// TODO: add difficulty selection, undo, erase, hint, solve buttons functionalities
 
 const Sudoku = () => {
   const [board, setBoard] = useState([]);
+  const [editableCells, setEditableCells] = useState([]);
   const [highlightedCell, setHighlightedCell] = useState(null);
   const [highlightedValue, setHighlightedValue] = useState(null);
+  const [changeStack, setChangeStack] = useState([]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/sudoku")
       .then((response) => response.json())
       .then((data) => {
         setBoard(data);
+
+        const initialEditableCells = data.map((row) =>
+          row.map((cell) => cell === 0)
+        );
+        setEditableCells(initialEditableCells);
       })
       .catch((error) => {
         console.error("Error fetching Sudoku board:", error);
@@ -41,6 +46,11 @@ const Sudoku = () => {
     if (/^[1-9]$/.test(value)) {
       const newBoard = [...board];
       newBoard[rowIndex][colIndex] = parseInt(value, 10);
+
+      setChangeStack((prevStack) => [
+        ...prevStack,
+        { row: rowIndex, col: colIndex },
+      ]);
       setBoard(newBoard);
     }
   };
@@ -48,9 +58,39 @@ const Sudoku = () => {
   const handleNumpadClick = (value) => {
     if (highlightedCell) {
       const { row, col } = highlightedCell;
+
+      if (editableCells[row][col]) {
+        const newBoard = [...board];
+        newBoard[row][col] = parseInt(value, 10);
+        setChangeStack((prevStack) => [...prevStack, { row, col }]);
+        setBoard(newBoard);
+      }
+    }
+  };
+
+  const handleUndo = () => {
+    setChangeStack((prevStack) => {
+      if (prevStack.length === 0) return prevStack;
+      const lastChange = prevStack[prevStack.length - 1];
       const newBoard = [...board];
-      newBoard[row][col] = parseInt(value, 10);
+      newBoard[lastChange.row][lastChange.col] = 0;
       setBoard(newBoard);
+
+      return prevStack.slice(0, -1);
+    });
+  };
+
+  const handleDelete = () => {
+    if (highlightedCell) {
+      const { row, col } = highlightedCell;
+
+      if (editableCells[row][col] && board[row][col] !== 0) {
+        const newBoard = [...board];
+        newBoard[row][col] = 0;
+
+        setChangeStack((prevStack) => [...prevStack, { row, col }]);
+        setBoard(newBoard);
+      }
     }
   };
 
@@ -72,18 +112,18 @@ const Sudoku = () => {
               const isSameValue =
                 highlightedValue !== null && cell === highlightedValue;
 
-              const isUserAdded = cell !== 0 && board[rowIndex][colIndex] !== 0;
+              const isEditable = editableCells[rowIndex][colIndex];
 
               return (
                 <input
                   key={`${rowIndex}-${colIndex}`}
                   className={`sudoku-cell ${isHighlighted ? "highlight" : ""} ${
                     isSameValue ? "value-highlight" : ""
-                  } ${isUserAdded ? "user-added" : ""}`}
+                  } ${isEditable ? "user-added" : ""}`}
                   type="text"
                   maxLength="1"
                   value={cell !== 0 ? cell : ""}
-                  readOnly={cell !== 0}
+                  readOnly={!isEditable}
                   onFocus={() => handleFocus(rowIndex, colIndex)}
                   onBlur={handleBlur}
                   onChange={(event) => handleChange(event, rowIndex, colIndex)}
@@ -135,6 +175,7 @@ const Sudoku = () => {
                   <button
                     type="button"
                     className="actions-button"
+                    onClick={handleUndo}
                     onMouseDown={() => (preventBlur = true)}
                     onMouseUp={() => (preventBlur = false)}
                   >
@@ -143,6 +184,7 @@ const Sudoku = () => {
                   <button
                     type="button"
                     className="actions-button"
+                    onClick={handleDelete}
                     onMouseDown={() => (preventBlur = true)}
                     onMouseUp={() => (preventBlur = false)}
                   >
