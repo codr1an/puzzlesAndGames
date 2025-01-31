@@ -6,7 +6,7 @@ def remove_numbers(grid, difficulty):
     difficulties = {
         "easy": 43,
         "medium": 50,
-        "hard": 55,
+        "hard": 56,
     }
 
     cells_to_remove = difficulties.get(difficulty, 36)

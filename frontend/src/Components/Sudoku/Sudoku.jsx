@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import "./Sudoku.css";
 import Sidebar from "../Home/Sidebar";
+import SudokuControls from "./SudokuControls";
+import SudokuDifficulty from "./SudokuDifficulty";
 
 const Sudoku = () => {
   const [board, setBoard] = useState([]);
@@ -8,6 +10,7 @@ const Sudoku = () => {
   const [highlightedCell, setHighlightedCell] = useState(null);
   const [highlightedValue, setHighlightedValue] = useState(null);
   const [changeStack, setChangeStack] = useState([]);
+  const [preventBlur, setPreventBlur] = useState(false);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/current_sudoku")
@@ -24,8 +27,6 @@ const Sudoku = () => {
         console.error("Error fetching Sudoku board:", error);
       });
   }, []);
-
-  let preventBlur = false;
 
   const handleFocus = (rowIndex, colIndex) => {
     setHighlightedCell({ row: rowIndex, col: colIndex });
@@ -109,6 +110,7 @@ const Sudoku = () => {
         console.error("Error fetching Sudoku board:", error);
       });
   };
+
   const handleSolution = () => {
     fetch("http://127.0.0.1:5000/api/sudoku_solution")
       .then((response) => response.json())
@@ -122,6 +124,7 @@ const Sudoku = () => {
         console.error("Error fetching Sudoku board:", error);
       });
   };
+
   const renderBoard = (board) => {
     return (
       <div className="sudoku-grid">
@@ -170,85 +173,17 @@ const Sudoku = () => {
         <Sidebar />
         <div className="sudoku-container">
           <div className="sudoku-components-container">
-            <div className="difficulty-container">
-              <h3>Difficulty: </h3>
-              <button
-                type="button"
-                className="difficulty-button"
-                onClick={() => handleDifficultyChange("easy")}
-              >
-                Easy
-              </button>
-              <button
-                type="button"
-                className="difficulty-button"
-                onClick={() => handleDifficultyChange("medium")}
-              >
-                Medium
-              </button>
-              <button
-                type="button"
-                className="difficulty-button"
-                onClick={() => handleDifficultyChange("hard")}
-              >
-                Hard
-              </button>
-            </div>
+            <SudokuDifficulty handleDifficultyChange={handleDifficultyChange} />
             <div className="sudoku-controls-container">
               <div className="sudoku-board-container">{renderBoard(board)}</div>
-              <div className="sudoku-buttons-container">
-                <div className="sudoku-numbers-buttons">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                    <button
-                      key={num}
-                      type="button"
-                      className="numpad-button"
-                      onClick={() => handleNumpadClick(num)}
-                      onMouseDown={() => (preventBlur = true)}
-                      onMouseUp={() => (preventBlur = false)}
-                    >
-                      {num}
-                    </button>
-                  ))}
-                </div>
-                <div className="sudoku-actions-buttons">
-                  <button
-                    type="button"
-                    className="actions-button"
-                    onClick={handleUndo}
-                    onMouseDown={() => (preventBlur = true)}
-                    onMouseUp={() => (preventBlur = false)}
-                  >
-                    <i className="bi bi-arrow-counterclockwise"> Undo</i>
-                  </button>
-                  <button
-                    type="button"
-                    className="actions-button"
-                    onClick={handleDelete}
-                    onMouseDown={() => (preventBlur = true)}
-                    onMouseUp={() => (preventBlur = false)}
-                  >
-                    <i className="bi bi-eraser"> Erase</i>
-                  </button>
-                  <button
-                    type="button"
-                    className="actions-button"
-                    onMouseDown={() => (preventBlur = true)}
-                    onMouseUp={() => (preventBlur = false)}
-                  >
-                    <i className="bi bi-lightbulb"> Hint</i>
-                  </button>
-                  <button
-                    type="button"
-                    className="actions-button"
-                    onMouseDown={() => (preventBlur = true)}
-                    onMouseUp={() => (preventBlur = false)}
-                    onClick={() => handleSolution()}
-                  >
-                    <i className="bi bi-check2"> Solve</i>
-                  </button>
-                </div>
-              </div>
+              <SudokuControls
+                handleUndo={handleUndo}
+                handleDelete={handleDelete}
+                handleSolution={handleSolution}
+                preventBlur={preventBlur}
+                handleNumpadClick={handleNumpadClick}
+                setPreventBlur={setPreventBlur}
+              />
             </div>
           </div>
         </div>

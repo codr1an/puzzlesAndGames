@@ -1,4 +1,16 @@
-const SudokuControls = ({ onNumberClick, onUndo, onDelete, onSolve }) => {
+import React from "react";
+
+const SudokuControls = ({
+  handleUndo,
+  handleDelete,
+  handleSolution,
+  preventBlur,
+  handleNumpadClick,
+  setPreventBlur,
+}) => {
+  const handleMouseDown = () => setPreventBlur(true);
+  const handleMouseUp = () => setPreventBlur(false);
+
   return (
     <div className="sudoku-buttons-container">
       <div className="sudoku-numbers-buttons">
@@ -7,20 +19,48 @@ const SudokuControls = ({ onNumberClick, onUndo, onDelete, onSolve }) => {
             key={num}
             type="button"
             className="numpad-button"
-            onClick={() => onNumberClick(num)}
+            onClick={() => handleNumpadClick(num)}
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
           >
             {num}
           </button>
         ))}
       </div>
       <div className="sudoku-actions-buttons">
-        <button type="button" className="actions-button" onClick={onUndo}>
+        <button
+          type="button"
+          className="actions-button"
+          onClick={handleUndo}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+        >
           <i className="bi bi-arrow-counterclockwise"> Undo</i>
         </button>
-        <button type="button" className="actions-button" onClick={onDelete}>
+        <button
+          type="button"
+          className="actions-button"
+          onClick={handleDelete}
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+        >
           <i className="bi bi-eraser"> Erase</i>
         </button>
-        <button type="button" className="actions-button" onClick={onSolve}>
+        <button
+          type="button"
+          className="actions-button"
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+        >
+          <i className="bi bi-lightbulb"> Hint</i>
+        </button>
+        <button
+          type="button"
+          className="actions-button"
+          onMouseDown={handleMouseDown}
+          onMouseUp={handleMouseUp}
+          onClick={handleSolution}
+        >
           <i className="bi bi-check2"> Solve</i>
         </button>
       </div>
