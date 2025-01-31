@@ -14,7 +14,6 @@ def generate_sudoku():
     rows = [g * base + r for g in shuffle(range(base)) for r in shuffle(range(base))]
     cols = [g * base + c for g in shuffle(range(base)) for c in shuffle(range(base))]
     nums = shuffle(range(1, side + 1))
-
     grid = [[nums[pattern(r, c)] for c in cols] for r in rows]
 
     return grid

@@ -10,7 +10,7 @@ const Sudoku = () => {
   const [changeStack, setChangeStack] = useState([]);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/sudoku")
+    fetch("http://127.0.0.1:5000/api/current_sudoku")
       .then((response) => response.json())
       .then((data) => {
         setBoard(data);
@@ -94,6 +94,34 @@ const Sudoku = () => {
     }
   };
 
+  const handleDifficultyChange = (difficulty) => {
+    fetch(
+      "http://127.0.0.1:5000/api/generate_new_sudoku?difficulty=" + difficulty
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        setBoard(data);
+
+        const newSudokuCells = data.map((row) => row.map((cell) => cell === 0));
+        setEditableCells(newSudokuCells);
+      })
+      .catch((error) => {
+        console.error("Error fetching Sudoku board:", error);
+      });
+  };
+  const handleSolution = () => {
+    fetch("http://127.0.0.1:5000/api/sudoku_solution")
+      .then((response) => response.json())
+      .then((data) => {
+        setBoard(data);
+
+        const solvedSudoku = data.map((row) => row.map((cell) => cell === 0));
+        setEditableCells(solvedSudoku);
+      })
+      .catch((error) => {
+        console.error("Error fetching Sudoku board:", error);
+      });
+  };
   const renderBoard = (board) => {
     return (
       <div className="sudoku-grid">
@@ -144,13 +172,25 @@ const Sudoku = () => {
           <div className="sudoku-components-container">
             <div className="difficulty-container">
               <h3>Difficulty: </h3>
-              <button type="button" className="difficulty-button">
+              <button
+                type="button"
+                className="difficulty-button"
+                onClick={() => handleDifficultyChange("easy")}
+              >
                 Easy
               </button>
-              <button type="button" className="difficulty-button">
+              <button
+                type="button"
+                className="difficulty-button"
+                onClick={() => handleDifficultyChange("medium")}
+              >
                 Medium
               </button>
-              <button type="button" className="difficulty-button">
+              <button
+                type="button"
+                className="difficulty-button"
+                onClick={() => handleDifficultyChange("hard")}
+              >
                 Hard
               </button>
             </div>
@@ -203,6 +243,7 @@ const Sudoku = () => {
                     className="actions-button"
                     onMouseDown={() => (preventBlur = true)}
                     onMouseUp={() => (preventBlur = false)}
+                    onClick={() => handleSolution()}
                   >
                     <i className="bi bi-check2"> Solve</i>
                   </button>
