@@ -14,6 +14,7 @@ const Sudoku = () => {
   const [solution, setSolution] = useState(null);
   const [hintCell, setHintCell] = useState(null);
   const [hintCells, setHintCells] = useState([]);
+  const [isSolved, setIsSolved] = useState(false); // New state for "Sudoku solved!"
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/current_sudoku")
@@ -86,6 +87,7 @@ const Sudoku = () => {
         { row: rowIndex, col: colIndex },
       ]);
       setBoard(newBoard);
+
       if (solution) {
         const isCorrect = solution[rowIndex][colIndex] === parseInt(value, 10);
         const cellElement = event.target;
@@ -95,6 +97,17 @@ const Sudoku = () => {
           cellElement.classList.remove("incorrect");
         }
       }
+
+      checkIfSolved(newBoard);
+    }
+  };
+
+  const checkIfSolved = (newBoard) => {
+    const isBoardSolved = newBoard.every((row, rowIndex) =>
+      row.every((cell, colIndex) => cell === solution[rowIndex][colIndex])
+    );
+    if (isBoardSolved) {
+      setIsSolved(true);
     }
   };
 
@@ -110,6 +123,7 @@ const Sudoku = () => {
         newBoard[row][col] = parseInt(value, 10);
         setChangeStack((prevStack) => [...prevStack, { row, col }]);
         setBoard(newBoard);
+        checkIfSolved(newBoard);
       }
     }
   };
@@ -122,6 +136,7 @@ const Sudoku = () => {
       newBoard[lastChange.row][lastChange.col] = 0;
       setBoard(newBoard);
 
+      checkIfSolved(newBoard);
       return prevStack.slice(0, -1);
     });
   };
@@ -140,6 +155,7 @@ const Sudoku = () => {
 
         setChangeStack((prevStack) => [...prevStack, { row, col }]);
         setBoard(newBoard);
+        checkIfSolved(newBoard);
       }
     }
   };
@@ -148,6 +164,7 @@ const Sudoku = () => {
     setSolution(null);
     setHintCell(null);
     setHintCells([]);
+    setIsSolved(false);
 
     fetch(
       `http://127.0.0.1:5000/api/generate_new_sudoku?difficulty=${difficulty}`
@@ -174,6 +191,7 @@ const Sudoku = () => {
   const handleSolution = () => {
     if (solution) {
       setBoard(solution);
+      setIsSolved(true);
     }
   };
 
@@ -242,6 +260,7 @@ const Sudoku = () => {
                 handleNumpadClick={handleNumpadClick}
                 setPreventBlur={setPreventBlur}
                 handleHint={handleHint}
+                isSolved={isSolved}
               />
             </div>
           </div>

@@ -1,3 +1,7 @@
+* {
+  user-select: none;
+}
+
 .sudoku-container {
   height: 100vh;
   width: 80%;
@@ -186,4 +190,25 @@
 
 .sudoku-cell.hint {
   color: orange;
+}
+
+.sudoku-buttons-container {
+  position: relative;
+}
+
+.sudoku-solved-message {
+  margin-top: 30px;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  color: rgb(130, 142, 156);
+  z-index: 1;
+  font-size: xx-large;
+}
+
+.sudoku-numbers-buttons,
+.sudoku-actions-buttons {
+  position: relative;
+  z-index: 0;
 }
