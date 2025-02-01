@@ -12,6 +12,8 @@ const Sudoku = () => {
   const [changeStack, setChangeStack] = useState([]);
   const [preventBlur, setPreventBlur] = useState(false);
   const [solution, setSolution] = useState(null);
+  const [hintCell, setHintCell] = useState(null);
+  const [hintCells, setHintCells] = useState([]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/current_sudoku")
@@ -35,6 +37,29 @@ const Sudoku = () => {
         console.error("Error fetching Sudoku board:", error);
       });
   }, []);
+
+  const handleHint = () => {
+    if (solution) {
+      const emptyCells = [];
+      for (let row = 0; row < board.length; row++) {
+        for (let col = 0; col < board[row].length; col++) {
+          if (board[row][col] === 0 && editableCells[row][col]) {
+            emptyCells.push({ row, col });
+          }
+        }
+      }
+
+      if (emptyCells.length > 0) {
+        const randomCell =
+          emptyCells[Math.floor(Math.random() * emptyCells.length)];
+        setHintCells((prevHintCells) => [...prevHintCells, randomCell]);
+        const newBoard = [...board];
+        newBoard[randomCell.row][randomCell.col] =
+          solution[randomCell.row][randomCell.col];
+        setBoard(newBoard);
+      }
+    }
+  };
 
   const handleFocus = (rowIndex, colIndex) => {
     setHighlightedCell({ row: rowIndex, col: colIndex });
@@ -77,7 +102,10 @@ const Sudoku = () => {
     if (highlightedCell) {
       const { row, col } = highlightedCell;
 
-      if (editableCells[row][col]) {
+      if (
+        editableCells[row][col] &&
+        !(hintCell && hintCell.row === row && hintCell.col === col)
+      ) {
         const newBoard = [...board];
         newBoard[row][col] = parseInt(value, 10);
         setChangeStack((prevStack) => [...prevStack, { row, col }]);
@@ -102,7 +130,11 @@ const Sudoku = () => {
     if (highlightedCell) {
       const { row, col } = highlightedCell;
 
-      if (editableCells[row][col] && board[row][col] !== 0) {
+      if (
+        editableCells[row][col] &&
+        board[row][col] !== 0 &&
+        !(hintCell && hintCell.row === row && hintCell.col === col)
+      ) {
         const newBoard = [...board];
         newBoard[row][col] = 0;
 
@@ -114,6 +146,8 @@ const Sudoku = () => {
 
   const handleDifficultyChange = (difficulty) => {
     setSolution(null);
+    setHintCell(null);
+    setHintCells([]);
 
     fetch(
       `http://127.0.0.1:5000/api/generate_new_sudoku?difficulty=${difficulty}`
@@ -163,18 +197,22 @@ const Sudoku = () => {
               const isEditable = editableCells[rowIndex][colIndex];
               const isIncorrect =
                 solution && cell !== 0 && cell !== solution[rowIndex][colIndex];
+              const isHint = hintCells.some(
+                (hint) => hint.row === rowIndex && hint.col === colIndex
+              );
 
               return (
                 <input
                   key={`${rowIndex}-${colIndex}`}
                   className={`sudoku-cell ${isHighlighted ? "highlight" : ""} 
-                  ${isSameValue ? "value-highlight" : ""} 
-                  ${isEditable ? "user-added" : ""} 
-                  ${isIncorrect ? "incorrect" : ""}`}
+                ${isSameValue ? "value-highlight" : ""} 
+                ${isEditable ? "user-added" : ""} 
+                ${isIncorrect ? "incorrect" : ""} 
+                ${isHint ? "hint" : ""}`}
                   type="text"
                   maxLength="1"
                   value={cell !== 0 ? cell : ""}
-                  readOnly={!isEditable}
+                  readOnly={!isEditable || isHint}
                   onFocus={() => handleFocus(rowIndex, colIndex)}
                   onBlur={handleBlur}
                   onChange={(event) => handleChange(event, rowIndex, colIndex)}
@@ -203,6 +241,7 @@ const Sudoku = () => {
                 preventBlur={preventBlur}
                 handleNumpadClick={handleNumpadClick}
                 setPreventBlur={setPreventBlur}
+                handleHint={handleHint}
               />
             </div>
           </div>

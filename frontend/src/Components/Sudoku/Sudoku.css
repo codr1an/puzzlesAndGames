@@ -183,3 +183,7 @@
 .sudoku-cell.incorrect {
   color: red;
 }
+
+.sudoku-cell.hint {
+  color: orange;
+}

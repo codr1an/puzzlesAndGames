@@ -4,9 +4,9 @@ const SudokuControls = ({
   handleUndo,
   handleDelete,
   handleSolution,
-  preventBlur,
   handleNumpadClick,
   setPreventBlur,
+  handleHint,
 }) => {
   const handleMouseDown = () => setPreventBlur(true);
   const handleMouseUp = () => setPreventBlur(false);
@@ -51,6 +51,7 @@ const SudokuControls = ({
           className="actions-button"
           onMouseDown={handleMouseDown}
           onMouseUp={handleMouseUp}
+          onClick={handleHint}
         >
           <i className="bi bi-lightbulb"> Hint</i>
         </button>
