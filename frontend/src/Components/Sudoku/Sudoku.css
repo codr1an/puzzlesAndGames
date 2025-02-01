@@ -180,6 +180,6 @@
   background-color: rgb(220, 227, 237);
 }
 
-.incorrect {
+.sudoku-cell.incorrect {
   color: red;
 }
