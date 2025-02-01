@@ -11,6 +11,7 @@ const Sudoku = () => {
   const [highlightedValue, setHighlightedValue] = useState(null);
   const [changeStack, setChangeStack] = useState([]);
   const [preventBlur, setPreventBlur] = useState(false);
+  const [solution, setSolution] = useState(null);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/current_sudoku")
@@ -22,6 +23,13 @@ const Sudoku = () => {
           row.map((cell) => cell === 0)
         );
         setEditableCells(initialEditableCells);
+
+        fetch("http://127.0.0.1:5000/api/sudoku_solution")
+          .then((response) => response.json())
+          .then((solutionData) => setSolution(solutionData))
+          .catch((error) =>
+            console.error("Error fetching Sudoku solution:", error)
+          );
       })
       .catch((error) => {
         console.error("Error fetching Sudoku board:", error);
@@ -53,6 +61,15 @@ const Sudoku = () => {
         { row: rowIndex, col: colIndex },
       ]);
       setBoard(newBoard);
+      if (solution) {
+        const isCorrect = solution[rowIndex][colIndex] === parseInt(value, 10);
+        const cellElement = event.target;
+        if (!isCorrect) {
+          cellElement.classList.add("incorrect");
+        } else {
+          cellElement.classList.remove("incorrect");
+        }
+      }
     }
   };
 
@@ -97,7 +114,7 @@ const Sudoku = () => {
 
   const handleDifficultyChange = (difficulty) => {
     fetch(
-      "http://127.0.0.1:5000/api/generate_new_sudoku?difficulty=" + difficulty
+      `http://127.0.0.1:5000/api/generate_new_sudoku?difficulty=${difficulty}`
     )
       .then((response) => response.json())
       .then((data) => {
@@ -105,6 +122,13 @@ const Sudoku = () => {
 
         const newSudokuCells = data.map((row) => row.map((cell) => cell === 0));
         setEditableCells(newSudokuCells);
+
+        fetch("http://127.0.0.1:5000/api/sudoku_solution")
+          .then((response) => response.json())
+          .then((solutionData) => setSolution(solutionData))
+          .catch((error) =>
+            console.error("Error fetching Sudoku solution:", error)
+          );
       })
       .catch((error) => {
         console.error("Error fetching Sudoku board:", error);
@@ -112,17 +136,9 @@ const Sudoku = () => {
   };
 
   const handleSolution = () => {
-    fetch("http://127.0.0.1:5000/api/sudoku_solution")
-      .then((response) => response.json())
-      .then((data) => {
-        setBoard(data);
-
-        const solvedSudoku = data.map((row) => row.map((cell) => cell === 0));
-        setEditableCells(solvedSudoku);
-      })
-      .catch((error) => {
-        console.error("Error fetching Sudoku board:", error);
-      });
+    if (solution) {
+      setBoard(solution);
+    }
   };
 
   const renderBoard = (board) => {
@@ -142,15 +158,17 @@ const Sudoku = () => {
 
               const isSameValue =
                 highlightedValue !== null && cell === highlightedValue;
-
               const isEditable = editableCells[rowIndex][colIndex];
+              const isIncorrect =
+                solution && cell !== 0 && cell !== solution[rowIndex][colIndex];
 
               return (
                 <input
                   key={`${rowIndex}-${colIndex}`}
-                  className={`sudoku-cell ${isHighlighted ? "highlight" : ""} ${
-                    isSameValue ? "value-highlight" : ""
-                  } ${isEditable ? "user-added" : ""}`}
+                  className={`sudoku-cell ${isHighlighted ? "highlight" : ""} 
+                  ${isSameValue ? "value-highlight" : ""} 
+                  ${isEditable ? "user-added" : ""} 
+                  ${isIncorrect ? "incorrect" : ""}`}
                   type="text"
                   maxLength="1"
                   value={cell !== 0 ? cell : ""}

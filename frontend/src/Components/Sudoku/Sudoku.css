@@ -180,6 +180,6 @@
   background-color: rgb(220, 227, 237);
 }
 
-.solution-number {
-  color: green;
+.incorrect {
+  color: red;
 }
