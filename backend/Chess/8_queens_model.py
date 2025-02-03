@@ -36,26 +36,19 @@ def solve_queens(board):
     status = solver.Solve()
 
     if status == pywraplp.Solver.OPTIMAL:
+        print("Advanced usage:")
+        print(f"Problem solved in {solver.wall_time():d} milliseconds")
+        print(f"Problem solved in {solver.iterations():d} iterations")
+        print(f"Problem solved in {solver.nodes():d} branch-and-bound nodes")
+
         for i in range(N):
             for j in range(N):
                 board[i][j] = 1 if X[i][j].solution_value() == 1 else 0
+
+        print("\nSolution:")
         for row in board:
             print(" ".join(map(str, row)))
         return board
     else:
         print("No solution found.")
         return None
-
-
-solve_queens(
-    [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 1],
-        [0, 0, 0, 0, 0, 1, 0, 0],
-        [0, 0, 0, 1, 0, 0, 0, 0],
-    ]
-)
