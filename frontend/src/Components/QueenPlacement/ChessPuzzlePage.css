@@ -1,0 +1,110 @@
+.chess-puzzle-container {
+  height: 100vh;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chess-game-elements {
+  display: flex;
+  justify-content: flex-start;
+  align-items: space-between;
+  gap: 30px;
+  width: 80%;
+  height: 90%;
+  margin-left: 60px;
+}
+
+.chess-controls-container {
+  width: 35%;
+  height: auto;
+  border: 0.1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  margin-left: auto;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  background-color: rgb(52, 57, 63);
+  color: white;
+}
+
+.chess-puzzle-title {
+  height: auto;
+  text-align: center;
+  border-bottom: 0.1px solid rgb(41, 47, 54);
+  background-color: rgb(41, 47, 54);
+}
+
+.chess-puzzle-description {
+  height: auto;
+  border-bottom: 0.1px solid rgba(41, 47, 54);
+  padding: 5%;
+}
+
+.chess-puzzle-moves-container {
+  height: 44%;
+  border-bottom: 0.1px solid rgba(41, 47, 54);
+  padding: 5%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chess-puzzle-moves {
+  height: 90%;
+  border: 0.1px solid rgb(255, 255, 255);
+  border-radius: 5px;
+  padding: 1%;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(102, 107, 114) transparent;
+}
+
+.info-message-container {
+  height: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(41, 47, 54);
+}
+
+.info-message {
+  border: 0.1px solid rgb(255, 255, 255);
+  border-radius: 5px;
+  padding: 1%;
+  width: 90%;
+  height: 70%;
+  background-color: white;
+  color: red;
+  font-size: larger;
+  text-align: center;
+}
+
+.chess-puzzle-buttons {
+  height: 10%;
+  background-color: rgb(41, 47, 54);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.chess-solve-button,
+.chess-reset-button {
+  width: 40%;
+  height: 50%;
+  margin: 5px;
+  background-color: rgb(86, 196, 59);
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+}
+
+.chess-reset-button {
+  background-color: rgb(221, 151, 46);
+}

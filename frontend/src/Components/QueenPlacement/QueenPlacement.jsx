@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./QueenPlacement.css";
+import "./ChessPuzzlePage.css";
 import Sidebar from "../Home/Sidebar";
 import Chessboard from "./Chessboard";
 import ChessPuzzleControls from "./ChessPuzzleControls";
 
 const QueenPlacement = () => {
   const pieceLogic = (currentCell) => {
-    return currentCell === "Q" ? null : "Q";
+    return currentCell === 1 ? null : 1;
   };
 
   const pieceImage = "/LightQueen.webp";
@@ -15,8 +15,8 @@ const QueenPlacement = () => {
   const [moves, setMoves] = useState("");
   const [board, setBoard] = useState(
     Array(8)
-      .fill(null)
-      .map(() => Array(8).fill(null))
+      .fill(0)
+      .map(() => Array(8).fill(0))
   );
   const [attackedSquares, setAttackedSquares] = useState([]);
 
@@ -24,15 +24,14 @@ const QueenPlacement = () => {
     setMoves("");
     setBoard(
       Array(8)
-        .fill(null)
-        .map(() => Array(8).fill(null))
+        .fill(0)
+        .map(() => Array(8).fill(0))
     );
     setAttackedSquares([]);
     console.log("Board Reset");
   };
 
   const solvePuzzle = () => {
-    setMoves("Puzzle solved!");
     console.log("Puzzle Solved");
   };
 
@@ -41,7 +40,7 @@ const QueenPlacement = () => {
 
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
-        if (board[row][col] === "Q") {
+        if (board[row][col] === 1) {
           queens.push({ row, col });
         }
       }
@@ -70,6 +69,13 @@ const QueenPlacement = () => {
   };
 
   const toggleSquare = (row, col) => {
+    const queenCount = board.flat().filter((cell) => cell === 1).length;
+
+    if (board[row][col] === 0 && queenCount >= 8) {
+      console.log("Maximum of 8 queens reached!");
+      return;
+    }
+
     const newBoard = board.map((r, rowIndex) => {
       if (rowIndex === row) {
         return r.map((cell, colIndex) => {
@@ -80,6 +86,19 @@ const QueenPlacement = () => {
         });
       }
       return r;
+    });
+
+    const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+    const chessNotation = `Q${files[col]}${8 - row}`;
+
+    setMoves((prevMoves) => {
+      const movesArray = prevMoves ? prevMoves.split(", ") : [];
+
+      if (board[row][col] === 1) {
+        return movesArray.filter((move) => move !== chessNotation).join(", ");
+      } else {
+        return [...movesArray, chessNotation].join(", ");
+      }
     });
 
     setBoard(newBoard);
@@ -101,8 +120,8 @@ const QueenPlacement = () => {
     <div>
       <div className="game-selection-container">
         <Sidebar />
-        <div className="queen-placement-container">
-          <div className="queen-game-elements">
+        <div className="chess-puzzle-container">
+          <div className="chess-game-elements">
             <Chessboard
               board={board}
               attackedSquares={attackedSquares}

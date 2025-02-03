@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import "./KnightDomination.css";
+import "../QueenPlacement/ChessPuzzlePage.css";
 import Sidebar from "../Home/Sidebar";
 import Chessboard from "../QueenPlacement/Chessboard";
 import ChessPuzzleControls from "../QueenPlacement/ChessPuzzleControls";
 
 const KnightDomination = () => {
   const pieceLogic = (currentCell) => {
-    return currentCell === "N" ? null : "N";
+    return currentCell === 1 ? 0 : 1;
   };
 
   const pieceImage = "/DarkKnight.webp";
@@ -14,8 +14,8 @@ const KnightDomination = () => {
 
   const [board, setBoard] = useState(
     Array(8)
-      .fill(null)
-      .map(() => Array(8).fill(null))
+      .fill(0)
+      .map(() => Array(8).fill(0))
   );
   const [dominatedSquares, setDominatedSquares] = useState([]);
   const [moves, setMoves] = useState("");
@@ -35,8 +35,8 @@ const KnightDomination = () => {
     setMoves("");
     setBoard(
       Array(8)
-        .fill(null)
-        .map(() => Array(8).fill(null))
+        .fill(0)
+        .map(() => Array(8).fill(0))
     );
     setDominatedSquares([]);
     console.log("Board Reset");
@@ -51,7 +51,7 @@ const KnightDomination = () => {
     let knights = [];
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
-        if (board[row][col] === "N") {
+        if (board[row][col] === 1) {
           knights.push({ row, col });
         }
       }
@@ -85,6 +85,20 @@ const KnightDomination = () => {
       }
       return r;
     });
+
+    const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+    const chessNotation = `N${files[col]}${8 - row}`;
+
+    setMoves((prevMoves) => {
+      const movesArray = prevMoves ? prevMoves.split(", ") : [];
+
+      if (board[row][col] === 1) {
+        return movesArray.filter((move) => move !== chessNotation).join(", ");
+      } else {
+        return [...movesArray, chessNotation].join(", ");
+      }
+    });
+
     setBoard(newBoard);
   };
 
@@ -103,8 +117,8 @@ const KnightDomination = () => {
     <div>
       <div className="game-selection-container">
         <Sidebar />
-        <div className="knight-domination-container">
-          <div className="knight-game-elements">
+        <div className="chess-puzzle-container">
+          <div className="chess-game-elements">
             <Chessboard
               board={board}
               attackedSquares={dominatedSquares}

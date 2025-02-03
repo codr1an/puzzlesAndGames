@@ -48,7 +48,9 @@ const Chessboard = ({
                 {tileNotationBottomRight}
               </div>
             )}
-            {cell && <img src={pieceImage} alt={pieceAlt} className="piece" />}
+            {cell === 1 && (
+              <img src={pieceImage} alt={pieceAlt} className="piece" />
+            )}
           </div>
         );
       })
