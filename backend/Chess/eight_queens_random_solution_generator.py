@@ -1,8 +1,10 @@
 import json
+from random import randrange
 from ortools.linear_solver import pywraplp
 
 
 def generate_all_queens_solutions():
+    """Generate all possible solutions for the 8-queens problem"""
     N = 8
     solver = pywraplp.Solver.CreateSolver("SAT")
     if not solver:
@@ -37,6 +39,7 @@ def generate_all_queens_solutions():
     return solutions
 
 
-def get_solutions_json():
+def get_random_solution():
+    """Get a random solution from the list of all solutions"""
     solutions = generate_all_queens_solutions()
-    return json.dumps(solutions, indent=4)
+    return json.dumps(solutions[randrange(len(solutions))])

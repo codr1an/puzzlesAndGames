@@ -1,7 +1,9 @@
+import json
 from ortools.linear_solver import pywraplp
 
 
 def solve_queens(board):
+    print(type(board))
     N = 8
     solver = pywraplp.Solver.CreateSolver("SAT")
     if not solver:
@@ -48,7 +50,8 @@ def solve_queens(board):
         print("\nSolution:")
         for row in board:
             print(" ".join(map(str, row)))
-        return board
+
+        return json.dumps(board)
     else:
         print("No solution found.")
         return None
