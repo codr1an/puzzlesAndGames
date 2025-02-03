@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./Chessboard.css";
 
-const Chessboard = ({ pieceLogic, pieceImage, pieceAlt }) => {
+const Chessboard = ({ pieceLogic, pieceImage, pieceAlt, knightLogic }) => {
   const createBoard = () => {
     return Array(8)
       .fill(null)
@@ -10,8 +10,9 @@ const Chessboard = ({ pieceLogic, pieceImage, pieceAlt }) => {
 
   const [board, setBoard] = useState(createBoard());
   const [attackedSquares, setAttackedSquares] = useState([]);
+  const [knightSquares, setKnightSquares] = useState([]);
 
-  const getAttackedSquares = () => {
+  const getAttackedSquaresForQueens = () => {
     let queens = [];
 
     for (let row = 0; row < 8; row++) {
@@ -44,6 +45,42 @@ const Chessboard = ({ pieceLogic, pieceImage, pieceAlt }) => {
     return attackSquares;
   };
 
+  const getAttackedSquaresForKnights = () => {
+    const knightMoves = [
+      [-2, -1],
+      [-2, 1],
+      [2, -1],
+      [2, 1],
+      [-1, -2],
+      [-1, 2],
+      [1, -2],
+      [1, 2],
+    ];
+
+    let attackedSquares = [];
+    let knightSquaresTemp = [];
+
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        if (board[row][col] === "N") {
+          knightSquaresTemp.push([row, col]);
+          attackedSquares.push([row, col]);
+
+          knightMoves.forEach(([rOffset, cOffset]) => {
+            const newRow = row + rOffset;
+            const newCol = col + cOffset;
+
+            if (newRow >= 0 && newRow < 8 && newCol >= 0 && newCol < 8) {
+              attackedSquares.push([newRow, newCol]);
+            }
+          });
+        }
+      }
+    }
+
+    return { attackedSquares, knightSquares: knightSquaresTemp };
+  };
+
   const toggleSquare = (row, col) => {
     const newBoard = board.map((r, rowIndex) => {
       if (rowIndex === row) {
@@ -61,8 +98,13 @@ const Chessboard = ({ pieceLogic, pieceImage, pieceAlt }) => {
   };
 
   useEffect(() => {
-    const attackSquares = getAttackedSquares();
-    setAttackedSquares(attackSquares);
+    const attackSquaresForQueens = getAttackedSquaresForQueens();
+    setAttackedSquares(attackSquaresForQueens);
+
+    const { attackedSquares, knightSquares: knightSquaresTemp } =
+      getAttackedSquaresForKnights();
+    setAttackedSquares((prevAttacks) => [...prevAttacks, ...attackedSquares]);
+    setKnightSquares(knightSquaresTemp);
   }, [board]);
 
   const renderBoard = () => {
@@ -75,6 +117,11 @@ const Chessboard = ({ pieceLogic, pieceImage, pieceAlt }) => {
         const isAttacked = attackedSquares.some(
           ([attackedRow, attackedCol]) =>
             attackedRow === rowIndex && attackedCol === colIndex
+        );
+
+        const isKnightSquare = knightSquares.some(
+          ([knightRow, knightCol]) =>
+            knightRow === rowIndex && knightCol === colIndex
         );
 
         let tileNotationTopLeft = "";
@@ -94,7 +141,9 @@ const Chessboard = ({ pieceLogic, pieceImage, pieceAlt }) => {
         return (
           <div
             key={`${rowIndex}-${colIndex}`}
-            className={`${squareClass} ${isAttacked ? "attacked" : ""}`}
+            className={`${squareClass} ${
+              isAttacked || isKnightSquare ? "attacked" : ""
+            }`}
             onClick={() => toggleSquare(rowIndex, colIndex)}
           >
             {tileNotationTopLeft && (
