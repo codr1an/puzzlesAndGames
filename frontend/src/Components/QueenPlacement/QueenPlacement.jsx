@@ -17,36 +17,38 @@ const QueenPlacement = () => {
         <Sidebar />
         <div className="queen-placement-container">
           <div className="queen-game-elements">
-            <div className="info-container">
-              <h4>8-Queens-Puzzle</h4>
-              <p>
-                The eight queens puzzle is the problem of placing eight chess
-                queens on the chessboard so that no two queens threaten each
-                other; thus, a solution requires that no two queens share the
-                same row, column, or diagonal. There are 92 solutions.
-              </p>
-              <h5>How to play:</h5>
-              <p>1. Place all 8 queens without any queen threatening another</p>
-              <p>2. Click on a tile to place a queen</p>
-              <p>3. Click on the same tile to remove the queen</p>
-              <p>4. If you can't find a solution, you can generate one</p>
-              <p>5. You can clear the board by pressing on the clear button</p>
-            </div>
-            <div className="board-container">
-              <Chessboard
-                pieceLogic={pieceLogic}
-                pieceImage={pieceImage}
-                pieceAlt={pieceAlt}
-              />
-            </div>
-            <div className="moves-container">
-              <h4>8-Queens-Puzzle</h4>
-              <p>
-                The eight queens puzzle is the problem of placing eight chess
-                queens on the chessboard so that no two queens threaten each
-                other; thus, a solution requires that no two queens share the
-                same row, column, or diagonal. There are 92 solutions.
-              </p>
+            <Chessboard
+              pieceLogic={pieceLogic}
+              pieceImage={pieceImage}
+              pieceAlt={pieceAlt}
+            />
+            <div className="queen-controls-container">
+              <div className="queen-title">
+                <h1>8 Queens Puzzle</h1>
+              </div>
+              <div className="queen-description">
+                <h2>Instructions</h2>
+                <p>
+                  The eight queens puzzle is the problem of placing eight chess
+                  queens on the chessboard so that no two queens threaten each
+                  other; thus, a solution requires that no two queens share the
+                  same row, column, or diagonal. There are 92 solutions.
+                </p>
+                <p>1. Place queens on the board by clicking on a tile</p>
+                <p>2. Remove a queen by clicking on it again</p>
+                <p>3. Each queen must not be threatened by another queen</p>
+                <p>
+                  4. The puzzle is solved if you've placed 8 queens that don't
+                  attack eachother
+                </p>
+              </div>
+              <div className="queen-moves">
+                <h2>Moves</h2>
+              </div>
+              <div className="queen-buttons">
+                <button className="queen-button">Reset</button>
+                <button className="queen-button">Solve</button>
+              </div>
             </div>
           </div>
         </div>

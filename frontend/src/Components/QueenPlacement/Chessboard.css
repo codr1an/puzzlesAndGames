@@ -2,8 +2,11 @@
   display: grid;
   grid-template-columns: repeat(8, 1fr);
   grid-template-rows: repeat(8, 1fr);
-  width: 100%;
+  width: 100;
   height: 100%;
+  border: 0.1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  aspect-ratio: 1;
 }
 
 .square {
@@ -16,6 +19,7 @@
   height: 100%;
   box-sizing: border-box;
   aspect-ratio: 1;
+  overflow: hidden;
 }
 
 .piece {
