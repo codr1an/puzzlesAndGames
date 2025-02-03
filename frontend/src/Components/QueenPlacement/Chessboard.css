@@ -62,5 +62,28 @@
 }
 
 .attacked {
-  background-color: rgb(238, 70, 3) !important;
+  position: relative;
+  background-color: transparent;
+}
+
+.attacked::before,
+.attacked::after {
+  position: absolute;
+  content: "";
+  background: red;
+  display: block;
+  width: 80%;
+  height: 5px;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.attacked::after {
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
 }

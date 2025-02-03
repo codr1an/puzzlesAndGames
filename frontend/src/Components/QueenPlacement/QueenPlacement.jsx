@@ -148,7 +148,7 @@ const QueenPlacement = () => {
         }
       }
     }
-
+    console.log(attackSquares.length);
     return attackSquares;
   };
 
@@ -179,6 +179,7 @@ const QueenPlacement = () => {
       const movesArray = prevMoves ? prevMoves.split(", ") : [];
 
       if (board[row][col] === 1) {
+        setInfoMessage("");
         return movesArray.filter((move) => move !== chessNotation).join(", ");
       } else {
         return [...movesArray, chessNotation].join(", ");
@@ -191,6 +192,13 @@ const QueenPlacement = () => {
   useEffect(() => {
     const attackSquaresForQueens = getAttackedSquaresForQueens();
     setAttackedSquares(attackSquaresForQueens);
+
+    const queenCount = board.flat().filter((cell) => cell === 1).length;
+    if (queenCount === 8 && attackSquaresForQueens.length === 0) {
+      setInfoMessage("Valid solution found");
+    } else if (queenCount === 8 && attackSquaresForQueens.length != 0) {
+      setInfoMessage("Invalid, queens are attacking each other");
+    }
   }, [board]);
 
   const instructions = [
@@ -214,7 +222,7 @@ const QueenPlacement = () => {
               pieceAlt={pieceAlt}
             />
             <ChessPuzzleControls
-              title="8 Queens Puzzle"
+              title="Queen Placement II"
               description="The eight queens puzzle is the problem of placing eight chess queens on the chessboard so that no two queens threaten each other."
               instructions={instructions}
               moves={moves}
