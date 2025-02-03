@@ -56,3 +56,7 @@
   font-size: large;
   font-weight: bold;
 }
+
+.attacked {
+  background-color: rgb(238, 70, 3) !important;
+}
