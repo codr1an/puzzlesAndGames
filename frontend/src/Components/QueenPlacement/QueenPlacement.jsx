@@ -6,12 +6,12 @@ import ChessPuzzleControls from "./ChessPuzzleControls";
 
 const QueenPlacement = () => {
   const pieceLogic = (currentCell) => {
-    return currentCell === 1 ? null : 1;
+    return currentCell === 1 ? 0 : 1;
   };
 
   const pieceImage = "/LightQueen.webp";
   const pieceAlt = "Queen";
-
+  const [infoMessage, setInfoMessage] = useState("");
   const [moves, setMoves] = useState("");
   const [board, setBoard] = useState(
     Array(8)
@@ -22,6 +22,7 @@ const QueenPlacement = () => {
 
   const resetHandler = () => {
     setMoves("");
+    setInfoMessage("");
     setBoard(
       Array(8)
         .fill(0)
@@ -31,8 +32,91 @@ const QueenPlacement = () => {
     console.log("Board Reset");
   };
 
-  const solvePuzzle = () => {
-    console.log("Puzzle Solved");
+  const solvePuzzle = async () => {
+    if (board.flat().every((cell) => cell === 0)) {
+      setInfoMessage("Generating solution...");
+
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:5000/api/random_queens_solution"
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch solution");
+        }
+
+        const solutionText = await response.json();
+        const parsedSolution = JSON.parse(solutionText);
+        setBoard(parsedSolution);
+
+        const movesArray = [];
+        const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+        parsedSolution.forEach((row, rowIndex) => {
+          row.forEach((cell, colIndex) => {
+            if (cell === 1) {
+              const chessNotation = `Q${files[colIndex]}${8 - rowIndex}`;
+              movesArray.push(chessNotation);
+            }
+          });
+        });
+
+        setMoves(movesArray.join(", "));
+        setAttackedSquares(getAttackedSquaresForQueens());
+
+        setInfoMessage("Solution found");
+      } catch (error) {
+        console.error("Error fetching solution:", error);
+        setInfoMessage("Failed to generate solution");
+      }
+    } else {
+      setInfoMessage("Checking current board...");
+
+      try {
+        const response = await fetch(
+          "http://127.0.0.1:5000/api/eight_queens_solution",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ board }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch solution");
+        }
+
+        const solutionText = await response.json();
+
+        if (solutionText === null) {
+          setInfoMessage("No solution found for current board");
+        } else {
+          const parsedSolution = JSON.parse(solutionText);
+          setBoard(parsedSolution);
+
+          const movesArray = [];
+          const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+          parsedSolution.forEach((row, rowIndex) => {
+            row.forEach((cell, colIndex) => {
+              if (cell === 1) {
+                const chessNotation = `Q${files[colIndex]}${8 - rowIndex}`;
+                movesArray.push(chessNotation);
+              }
+            });
+          });
+
+          setMoves(movesArray.join(", "));
+          setAttackedSquares(getAttackedSquaresForQueens());
+
+          setInfoMessage("Solution found");
+        }
+      } catch (error) {
+        console.error("Error fetching solution:", error);
+        setInfoMessage("Failed to generate solution");
+      }
+    }
   };
 
   const getAttackedSquaresForQueens = () => {
@@ -72,7 +156,7 @@ const QueenPlacement = () => {
     const queenCount = board.flat().filter((cell) => cell === 1).length;
 
     if (board[row][col] === 0 && queenCount >= 8) {
-      console.log("Maximum of 8 queens reached!");
+      setInfoMessage("Maximum of 8 queens reached!");
       return;
     }
 
@@ -136,6 +220,7 @@ const QueenPlacement = () => {
               moves={moves}
               resetHandler={resetHandler}
               solveHandler={solvePuzzle}
+              infoMessage={infoMessage}
             />
           </div>
         </div>

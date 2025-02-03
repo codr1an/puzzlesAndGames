@@ -7,6 +7,7 @@ const ChessPuzzleControls = ({
   moves,
   resetHandler,
   solveHandler,
+  infoMessage,
 }) => {
   return (
     <div className="chess-controls-container">
@@ -33,7 +34,7 @@ const ChessPuzzleControls = ({
       </div>
       <div className="info-message-container">
         <div className="info-message">
-          <p>No solution found for current board</p>
+          <p>{infoMessage}</p>
         </div>
       </div>
 
