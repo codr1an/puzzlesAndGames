@@ -1,6 +1,6 @@
 .knight-domination-container {
   height: 100vh;
-  width: 80%;
+  width: 90%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -9,33 +9,62 @@
 .knight-game-elements {
   display: flex;
   justify-content: flex-start;
-  align-items: stretch;
-  width: 100%;
-  height: 80%;
+  align-items: space-between;
+  gap: 30px;
+  width: 80%;
+  height: 90%;
   margin-left: 60px;
 }
 
-.knight-board-container {
-  flex: 1 1 50%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 0.1px solid rgba(0, 0, 0, 0.2);
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  aspect-ratio: 1;
-}
-
-.knight-moves-container {
-  padding: 1%;
-  width: 25%;
+.knight-controls-container {
+  width: 35%;
   height: auto;
   border: 0.1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   flex-shrink: 0;
+  margin-left: auto;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: space-between;
+  background-color: rgb(237, 214, 176);
 }
 
-.info-container h4,
-h5 {
-  text-decoration: underline;
+.knight-title {
+  height: auto;
+  text-align: center;
+  border-bottom: 0.1px solid rgba(0, 0, 0, 0.2);
+  background-color: rgb(184, 135, 98);
+}
+
+.knight-description {
+  height: auto;
+  border-bottom: 0.1px solid rgba(0, 0, 0, 0.2);
+  padding: 5%;
+}
+
+.knight-moves {
+  height: 44%;
+  border-bottom: 0.1px solid rgba(0, 0, 0, 0.2);
+  padding: 5%;
+}
+
+.knight-buttons {
+  height: 10%;
+  background-color: rgb(184, 135, 98);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.knight-button {
+  width: 40%;
+  height: 50%;
+  margin: 5px;
+  background-color: rgb(237, 214, 176);
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
 }
