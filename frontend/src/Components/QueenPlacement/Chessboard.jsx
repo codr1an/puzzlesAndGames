@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./Chessboard.css";
 
-const Chessboard = () => {
+const Chessboard = ({ pieceLogic, pieceImage, pieceAlt }) => {
   const createBoard = () => {
     return Array(8)
       .fill(null)
@@ -15,7 +15,7 @@ const Chessboard = () => {
       if (rowIndex === row) {
         return r.map((cell, colIndex) => {
           if (colIndex === col) {
-            return cell === "Q" ? null : "Q";
+            return pieceLogic(cell);
           }
           return cell;
         });
@@ -60,9 +60,7 @@ const Chessboard = () => {
                 {tileNotationBottomRight}
               </div>
             )}
-            {cell && (
-              <img src="/LightQueen.webp" alt="Queen" className="piece" />
-            )}
+            {cell && <img src={pieceImage} alt={pieceAlt} className="piece" />}
           </div>
         );
       })

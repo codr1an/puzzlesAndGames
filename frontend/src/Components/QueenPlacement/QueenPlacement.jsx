@@ -1,8 +1,16 @@
+import React, { useState } from "react";
 import "./QueenPlacement.css";
 import Sidebar from "../Home/Sidebar";
 import Chessboard from "./Chessboard";
 
 const QueenPlacement = () => {
+  const pieceLogic = (currentCell) => {
+    return currentCell === "Q" ? null : "Q";
+  };
+
+  const pieceImage = "/LightQueen.webp";
+  const pieceAlt = "Queen";
+
   return (
     <div>
       <div className="game-selection-container">
@@ -25,10 +33,13 @@ const QueenPlacement = () => {
               <p>5. You can clear the board by pressing on the clear button</p>
             </div>
             <div className="board-container">
-              <Chessboard />
+              <Chessboard
+                pieceLogic={pieceLogic}
+                pieceImage={pieceImage}
+                pieceAlt={pieceAlt}
+              />
             </div>
             <div className="moves-container">
-              {" "}
               <h4>8-Queens-Puzzle</h4>
               <p>
                 The eight queens puzzle is the problem of placing eight chess
