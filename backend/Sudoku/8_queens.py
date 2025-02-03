@@ -4,11 +4,12 @@ from ortools.sat.python import cp_model
 
 
 class NQueenSolutionPrinter(cp_model.CpSolverSolutionCallback):
-    """Print intermediate solutions."""
+    """Print intermediate solutions as a 2D array with 0s and 1s."""
 
-    def __init__(self, queens: list[cp_model.IntVar]):
+    def __init__(self, queens: list[cp_model.IntVar], board_size: int):
         cp_model.CpSolverSolutionCallback.__init__(self)
         self.__queens = queens
+        self.__board_size = board_size
         self.__solution_count = 0
         self.__start_time = time.time()
 
@@ -24,15 +25,17 @@ class NQueenSolutionPrinter(cp_model.CpSolverSolutionCallback):
         )
         self.__solution_count += 1
 
-        all_queens = range(len(self.__queens))
-        for i in all_queens:
-            for j in all_queens:
-                if self.value(self.__queens[j]) == i:
-                    # There is a queen in column j, row i.
-                    print("Q", end=" ")
-                else:
-                    print("_", end=" ")
-            print()
+        # Create a 2D board initialized with 0s
+        board = [[0] * self.__board_size for _ in range(self.__board_size)]
+
+        # Place the queens on the board (value of the queens gives the row index)
+        for col in range(self.__board_size):
+            row = self.Value(self.__queens[col])
+            board[row][col] = 1  # Place a queen at the correct position
+
+        # Print the board
+        for row in board:
+            print(" ".join(str(cell) for cell in row))
         print()
 
 
@@ -55,7 +58,7 @@ def main(board_size: int) -> None:
 
     # Solve the model.
     solver = cp_model.CpSolver()
-    solution_printer = NQueenSolutionPrinter(queens)
+    solution_printer = NQueenSolutionPrinter(queens, board_size)
     solver.parameters.enumerate_all_solutions = True
     solver.solve(model, solution_printer)
 
