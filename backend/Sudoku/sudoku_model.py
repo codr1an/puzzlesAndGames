@@ -2,7 +2,6 @@ from ortools.sat.python import cp_model
 
 
 def solve_sudoku(grid):
-    print(grid)
     n = 3
     N = n * n
     model = cp_model.CpModel()
