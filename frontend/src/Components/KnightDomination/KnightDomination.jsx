@@ -11,7 +11,7 @@ const KnightDomination = () => {
 
   const pieceImage = "/DarkKnight.webp";
   const pieceAlt = "Knight";
-
+  const [infoMessage, setInfoMessage] = useState("");
   const [board, setBoard] = useState(
     Array(8)
       .fill(0)
@@ -39,12 +39,57 @@ const KnightDomination = () => {
         .map(() => Array(8).fill(0))
     );
     setDominatedSquares([]);
-    console.log("Board Reset");
+    setInfoMessage("");
   };
 
-  const solvePuzzle = () => {
-    setMoves("Puzzle solved!");
-    console.log("Puzzle Solved");
+  const solvePuzzle = async () => {
+    setInfoMessage("Generating solution...");
+
+    try {
+      const response = await fetch(
+        "http://127.0.0.1:5000/api/solve_knight_domination",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ board }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch solution");
+      }
+      const responseText = await response.text();
+
+      let parsedSolution;
+      try {
+        parsedSolution = JSON.parse(responseText);
+      } catch (error) {
+        console.error("Error parsing solution:", error);
+        setInfoMessage("Error parsing solution");
+        return;
+      }
+
+      setBoard(parsedSolution);
+
+      const movesArray = [];
+      const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+      parsedSolution.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          if (cell === 1) {
+            const chessNotation = `N${files[colIndex]}${8 - rowIndex}`;
+            movesArray.push(chessNotation);
+          }
+        });
+      });
+
+      setMoves(movesArray.join(", "));
+    } catch (error) {
+      console.error("Error fetching solution:", error);
+      setInfoMessage("Failed to generate solution");
+    }
   };
 
   const getDominatedSquaresForKnights = () => {
@@ -106,6 +151,35 @@ const KnightDomination = () => {
     setDominatedSquares(getDominatedSquaresForKnights());
   }, [board]);
 
+  useEffect(() => {
+    setDominatedSquares(getDominatedSquaresForKnights());
+
+    let allSquaresCovered = true;
+    for (let row = 0; row < 8; row++) {
+      for (let col = 0; col < 8; col++) {
+        if (
+          !dominatedSquares.some(([r, c]) => r === row && c === col) &&
+          board[row][col] === 0
+        ) {
+          allSquaresCovered = false;
+          break;
+        }
+      }
+    }
+
+    const knightCount = board.flat().filter((cell) => cell === 1).length;
+
+    if (allSquaresCovered) {
+      if (knightCount === 12) {
+        setInfoMessage("Optimal solution");
+      } else {
+        setInfoMessage("Substandard solution");
+      }
+    } else {
+      setInfoMessage("");
+    }
+  }, [board, dominatedSquares]);
+
   const instructions = [
     "1. Place knights on the board by clicking on a tile.",
     "2. Remove a knight by clicking on it again.",
@@ -133,6 +207,7 @@ const KnightDomination = () => {
               moves={moves}
               resetHandler={resetHandler}
               solveHandler={solvePuzzle}
+              infoMessage={infoMessage}
             />
           </div>
         </div>
