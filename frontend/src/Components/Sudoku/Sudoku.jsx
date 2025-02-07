@@ -14,7 +14,7 @@ const Sudoku = () => {
   const [solution, setSolution] = useState(null);
   const [hintCell, setHintCell] = useState(null);
   const [hintCells, setHintCells] = useState([]);
-  const [isSolved, setIsSolved] = useState(false); // New state for "Sudoku solved!"
+  const [isSolved, setIsSolved] = useState(false);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/current_sudoku")

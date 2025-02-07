@@ -40,12 +40,23 @@ def solve_killer_sudoku(cages, n=3):
         return None
 
 
-# Example usage:
 cages = [
-    {"cells": [(0, 0), (0, 1)], "sum": 3},
-    {"cells": [(1, 0), (2, 0)], "sum": 6},
-    # Add more cage constraints here
+    {"cells": [(0, 0), (0, 1)], "sum": 12},
+    {"cells": [(1, 0), (1, 1)], "sum": 3},
+    {"cells": [(0, 2), (1, 2)], "sum": 11},
+    {"cells": [(2, 1), (3, 1), (2, 2), (3, 0), (4, 1)], "sum": 26},
+    {"cells": [(2, 5), (3, 5), (3, 4), (4, 5)], "sum": 19},
+    {"cells": [(3, 7), (4, 7)], "sum": 11},
+    {"cells": [(4, 2), (5, 2), (4, 3), (6, 2)], "sum": 17},
+    {"cells": [(4, 6), (5, 6)], "sum": 4},
+    {"cells": [(5, 0), (6, 0), (7, 0), (6, 1)], "sum": 20},
+    {"cells": [(5, 4), (6, 4), (6, 3), (6, 5)], "sum": 13},
+    {"cells": [(5, 7), (6, 7)], "sum": 9},
+    {"cells": [(7, 6), (8, 6)], "sum": 14},
+    {"cells": [(7, 8), (8, 8), (8, 7)], "sum": 12},
+    {"cells": [(8, 1), (8, 2), (8, 3)], "sum": 20},
 ]
+
 
 solution = solve_killer_sudoku(cages)
 if solution:
