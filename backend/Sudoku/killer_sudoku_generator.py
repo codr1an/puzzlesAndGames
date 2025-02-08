@@ -1,6 +1,11 @@
 import random
 import json
-from sudoku_generator import generate_sudoku
+import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+from sudoku.sudoku_generator import generate_sudoku
 
 
 def generate_cages(grid):
