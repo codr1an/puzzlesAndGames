@@ -1,5 +1,28 @@
 import React from "react";
 
+// Function to check if two cages are neighbors
+const areCagesNeighbors = (cage1, cage2) => {
+  return cage1.some(([x1, y1]) =>
+    cage2.some(([x2, y2]) => Math.abs(x1 - x2) <= 1 && Math.abs(y1 - y2) <= 1)
+  );
+};
+
+// Function to get a unique color for each cage
+const getUniqueCageColor = (cageIndex, cages) => {
+  let color = `hsl(${(cageIndex * 60) % 360}, 70%, 80%)`;
+
+  // Compare with other cages to ensure no neighbors have the same color
+  for (let i = 0; i < cageIndex; i++) {
+    if (areCagesNeighbors(cages[cageIndex].cage, cages[i].cage)) {
+      if (color === cages[i].color) {
+        color = `hsl(${(color.match(/\d+/)[0] + 60) % 360}, 70%, 80%)`;
+      }
+    }
+  }
+
+  return color;
+};
+
 const SudokuBoard = ({
   board,
   highlightedCell,
@@ -12,6 +35,11 @@ const SudokuBoard = ({
   handleChange,
   cages,
 }) => {
+  // Assign colors to cages dynamically
+  cages.forEach((cage, index) => {
+    cages[index].color = getUniqueCageColor(index, cages);
+  });
+
   const renderBoard = (board) => {
     return (
       <div className="sudoku-grid">
@@ -41,9 +69,7 @@ const SudokuBoard = ({
               );
 
               const cageColor =
-                cageIndex !== -1
-                  ? `hsl(${(cageIndex * 60) % 360}, 70%, 80%)`
-                  : "white";
+                cageIndex !== -1 ? cages[cageIndex].color : "white";
 
               const renderCageSum =
                 cageIndex !== -1 &&
