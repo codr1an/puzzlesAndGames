@@ -10,8 +10,10 @@ CORS(app)
 @app.route("/api/killer_sudoku", methods=["GET"])
 def generate_killer_sudoku():
     """Generate a new killer sudoku puzzle"""
-    grid = generate_sudoku()
+    grid = current_sudoku
     cages = generate_cages(grid)
+    for row in grid:
+        print(row)
 
     return cages
 

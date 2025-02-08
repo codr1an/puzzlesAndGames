@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./SudokuKiller.css";
 import Sidebar from "../Home/Sidebar";
 import SudokuControls from "../Sudoku/SudokuControls";
+import SudokuBoard from "./SudokuBoard";
 
 const SudokuKiller = () => {
   const [board, setBoard] = useState([]);
@@ -114,6 +115,7 @@ const SudokuKiller = () => {
   };
 
   const checkIfSolved = (newBoard) => {
+    if (!solution) return;
     const isBoardSolved = newBoard.every((row, rowIndex) =>
       row.every((cell, colIndex) => cell === solution[rowIndex][colIndex])
     );
@@ -178,54 +180,6 @@ const SudokuKiller = () => {
     }
   };
 
-  const renderBoard = (board) => {
-    return (
-      <div className="sudoku-grid">
-        {board.map((row, rowIndex) => (
-          <div key={rowIndex} className="sudoku-row">
-            {row.map((cell, colIndex) => {
-              const isHighlighted =
-                highlightedCell &&
-                (highlightedCell.row === rowIndex ||
-                  highlightedCell.col === colIndex ||
-                  (Math.floor(rowIndex / 3) ===
-                    Math.floor(highlightedCell.row / 3) &&
-                    Math.floor(colIndex / 3) ===
-                      Math.floor(highlightedCell.col / 3)));
-
-              const isSameValue =
-                highlightedValue !== null && cell === highlightedValue;
-              const isEditable = editableCells[rowIndex][colIndex];
-              const isIncorrect =
-                solution && cell !== 0 && cell !== solution[rowIndex][colIndex];
-              const isHint = hintCells.some(
-                (hint) => hint.row === rowIndex && hint.col === colIndex
-              );
-
-              return (
-                <input
-                  key={`${rowIndex}-${colIndex}`}
-                  className={`sudoku-cell ${isHighlighted ? "highlight" : ""} 
-                ${isSameValue ? "value-highlight" : ""} 
-                ${isEditable ? "user-added" : ""} 
-                ${isIncorrect ? "incorrect" : ""} 
-                ${isHint ? "hint" : ""}`}
-                  type="text"
-                  maxLength="1"
-                  value={cell !== 0 ? cell : ""}
-                  readOnly={!isEditable || isHint}
-                  onFocus={() => handleFocus(rowIndex, colIndex)}
-                  onBlur={handleBlur}
-                  onChange={(event) => handleChange(event, rowIndex, colIndex)}
-                />
-              );
-            })}
-          </div>
-        ))}
-      </div>
-    );
-  };
-
   return (
     <div>
       <div className="game-selection-container">
@@ -233,7 +187,20 @@ const SudokuKiller = () => {
         <div className="sudoku-container">
           <div className="sudoku-components-container">
             <div className="sudoku-controls-container">
-              <div className="sudoku-board-container">{renderBoard(board)}</div>
+              <div className="sudoku-board-container">
+                <SudokuBoard
+                  board={board}
+                  highlightedCell={highlightedCell}
+                  highlightedValue={highlightedValue}
+                  editableCells={editableCells}
+                  solution={solution}
+                  hintCells={hintCells}
+                  handleFocus={handleFocus}
+                  handleBlur={handleBlur}
+                  handleChange={handleChange}
+                  cages={cages}
+                />
+              </div>
               <SudokuControls
                 handleUndo={handleUndo}
                 handleDelete={handleDelete}
@@ -251,4 +218,5 @@ const SudokuKiller = () => {
     </div>
   );
 };
+
 export default SudokuKiller;
