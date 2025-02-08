@@ -18,7 +18,6 @@ const SudokuBoard = ({
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className="sudoku-row">
             {row.map((cell, colIndex) => {
-              // Find which cage the current cell belongs to
               const cageIndex = cages.findIndex((cage) =>
                 cage.cage.some(([x, y]) => x === rowIndex && y === colIndex)
               );
@@ -41,29 +40,46 @@ const SudokuBoard = ({
                 (hint) => hint.row === rowIndex && hint.col === colIndex
               );
 
-              // Assign a background color based on the cage index
               const cageColor =
                 cageIndex !== -1
                   ? `hsl(${(cageIndex * 60) % 360}, 70%, 80%)`
                   : "white";
 
+              const renderCageSum =
+                cageIndex !== -1 &&
+                cages[cageIndex].cage[0][0] === rowIndex &&
+                cages[cageIndex].cage[0][1] === colIndex
+                  ? cages[cageIndex].sum
+                  : null;
+
               return (
-                <input
+                <div
                   key={`${rowIndex}-${colIndex}`}
-                  className={`sudoku-cell ${isHighlighted ? "highlight" : ""} 
-                  ${isSameValue ? "value-highlight" : ""} 
-                  ${isEditable ? "user-added" : ""} 
-                  ${isIncorrect ? "incorrect" : ""} 
-                  ${isHint ? "hint" : ""}`}
-                  type="text"
-                  maxLength="1"
-                  value={cell !== 0 ? cell : ""}
-                  readOnly={!isEditable || isHint}
-                  onFocus={() => handleFocus(rowIndex, colIndex)}
-                  onBlur={handleBlur}
-                  onChange={(event) => handleChange(event, rowIndex, colIndex)}
-                  style={{ backgroundColor: cageColor }} // Set background color here
-                />
+                  className="sudoku-cell-container"
+                >
+                  <input
+                    className={`sudoku-cell ${isHighlighted ? "highlight" : ""} 
+                    ${isSameValue ? "value-highlight" : ""} 
+                    ${isEditable ? "user-added" : ""} 
+                    ${isIncorrect ? "incorrect" : ""} 
+                    ${isHint ? "hint" : ""}`}
+                    type="text"
+                    maxLength="1"
+                    value={cell !== 0 ? cell : ""}
+                    readOnly={!isEditable || isHint}
+                    onFocus={() => handleFocus(rowIndex, colIndex)}
+                    onBlur={handleBlur}
+                    onChange={(event) =>
+                      handleChange(event, rowIndex, colIndex)
+                    }
+                    style={{
+                      backgroundColor: cageColor,
+                    }}
+                  />
+                  {renderCageSum !== null && (
+                    <span className="cage-sum">{renderCageSum}</span>
+                  )}
+                </div>
               );
             })}
           </div>

@@ -1,13 +1,12 @@
-.cage-0 {
-  background-color: rgba(255, 165, 0, 0.3); /* Orange cage color */
+.sudoku-cell-container {
+  position: relative;
 }
 
-.cage-1 {
-  background-color: rgba(0, 255, 0, 0.3); /* Green cage color */
+.cage-sum {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  font-size: 0.8rem;
+  color: rgb(50, 90, 175);
+  font-weight: bold;
 }
-
-.cage-2 {
-  background-color: rgba(0, 0, 255, 0.3); /* Blue cage color */
-}
-
-/* Add more cages styles as needed */
