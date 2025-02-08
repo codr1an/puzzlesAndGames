@@ -45,6 +45,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .sudoku-buttons-container {
@@ -165,6 +166,17 @@
   color: rgb(50, 90, 175);
   border-radius: 10px;
   width: 100px;
+  height: 35px;
+  overflow: hidden;
+}
+
+.new-game-button {
+  border: none;
+  background-color: rgb(226, 235, 243);
+  font-size: large;
+  color: rgb(50, 90, 175);
+  border-radius: 10px;
+  width: 120px;
   height: 35px;
   overflow: hidden;
 }

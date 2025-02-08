@@ -180,6 +180,39 @@ const SudokuKiller = () => {
     }
   };
 
+  const handleNewGame = () => {
+    setSolution(null);
+    setHintCell(null);
+    setHintCells([]);
+    setIsSolved(false);
+
+    fetch("http://127.0.0.1:5000/api/generate_new_killer_sudoku")
+      .then((response) => response.json())
+      .then((data) => {
+        setCages(data);
+      })
+      .catch((error) => console.error("Error fetching data:", error));
+
+    setBoard([
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]);
+
+    fetch("http://127.0.0.1:5000/api/killer_sudoku_solution")
+      .then((response) => response.json())
+      .then((solutionData) => setSolution(solutionData))
+      .catch((error) =>
+        console.error("Error fetching Sudoku solution:", error)
+      );
+  };
+
   return (
     <div>
       <div className="game-selection-container">
@@ -200,6 +233,13 @@ const SudokuKiller = () => {
                   handleChange={handleChange}
                   cages={cages}
                 />
+                <button
+                  type="button"
+                  className="new-game-button"
+                  onClick={handleNewGame}
+                >
+                  <i class="bi bi-plus">New game</i>
+                </button>
               </div>
               <SudokuControls
                 handleUndo={handleUndo}
