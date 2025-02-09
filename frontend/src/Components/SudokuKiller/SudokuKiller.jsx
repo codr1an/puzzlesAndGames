@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./SudokuKiller.css";
 import Sidebar from "../Home/Sidebar";
 import SudokuControls from "../Sudoku/SudokuControls";
-import SudokuBoard from "./SudokuBoard";
+import SudokuBoard from "./SudokuKillerBoard";
 
 const SudokuKiller = () => {
   const [board, setBoard] = useState([]);
