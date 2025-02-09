@@ -190,7 +190,11 @@ const SudokuKiller = () => {
       .then((response) => response.json())
       .then((data) => {
         setCages(data);
+
+        return fetch("http://127.0.0.1:5000/api/killer_sudoku_solution");
       })
+      .then((response) => response.json())
+      .then((solutionData) => setSolution(solutionData))
       .catch((error) => console.error("Error fetching data:", error));
 
     setBoard([
@@ -204,13 +208,6 @@ const SudokuKiller = () => {
       [0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]);
-
-    fetch("http://127.0.0.1:5000/api/killer_sudoku_solution")
-      .then((response) => response.json())
-      .then((solutionData) => setSolution(solutionData))
-      .catch((error) =>
-        console.error("Error fetching Sudoku solution:", error)
-      );
   };
 
   return (

@@ -201,7 +201,7 @@
 }
 
 .sudoku-cell.hint {
-  color: orange;
+  color: rgb(50, 90, 175);
 }
 
 .sudoku-buttons-container {

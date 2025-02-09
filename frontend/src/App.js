@@ -1,5 +1,10 @@
 import "./App.css";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Route,
+  BrowserRouter as Router,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import Home from "./Components/Home/Home";
 import Sudoku from "./Components/Sudoku/Sudoku";
 import SudokKiller from "./Components/SudokuKiller/SudokuKiller";
@@ -10,7 +15,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Navigate to="/sudoku" />} />
         <Route path="/sudoku" element={<Sudoku />} />
         <Route path="/sudoku_killer" element={<SudokKiller />} />
         <Route path="/queen_placement_2" element={<QueenPlacement />} />

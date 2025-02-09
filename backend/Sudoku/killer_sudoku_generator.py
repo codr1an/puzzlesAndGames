@@ -1,11 +1,4 @@
 import random
-import json
-import os
-import sys
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
-from sudoku.sudoku_generator import generate_sudoku
 
 
 def generate_cages(grid):
@@ -62,11 +55,4 @@ def generate_cages(grid):
                 # Add the cage and its sum to the list of cages
                 cages.append({"cage": cage, "sum": cage_sum})
 
-    return json.dumps(cages, indent=4)
-
-
-# Generate a Sudoku grid
-grid = generate_sudoku()
-
-# Call the function to get the cages in JSON format
-json_body = generate_cages(grid)
+    return cages
