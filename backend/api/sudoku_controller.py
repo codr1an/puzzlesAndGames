@@ -6,33 +6,42 @@ from sudoku.sudoku_model import solve_sudoku
 sudoku_bp = Blueprint("sudoku", __name__)
 
 
-def generate_unsolved_sudoku(difficulty="easy"):
-    """Generate an initial unsolved sudoku puzzle"""
-    generated_sudoku = generate_sudoku()
-    unsolved_sudoku = remove_numbers(generated_sudoku, difficulty)
-    return unsolved_sudoku
+class SudokuState:
+    """Manages the current state of the Classic Sudoku puzzle."""
+
+    def __init__(self, difficulty="easy"):
+        self.generate_new(difficulty)
+
+    def generate_new(self, difficulty="easy"):
+        """Generate a new Sudoku puzzle with the given difficulty."""
+        full_sudoku = generate_sudoku()
+        self.unsolved_sudoku = remove_numbers(full_sudoku, difficulty)
+
+    def get_puzzle(self):
+        return self.unsolved_sudoku
+
+    def get_solution(self):
+        return solve_sudoku(self.unsolved_sudoku)
 
 
-current_sudoku = generate_unsolved_sudoku()
-
-
-@sudoku_bp.route("/sudoku_solution", methods=["GET"])
-def get_sudoku_solution():
-    """Solve sudoku using the mathematical model"""
-    solved_sudoku = solve_sudoku(current_sudoku)
-    return jsonify(solved_sudoku)
-
-
-@sudoku_bp.route("/generate_new_sudoku", methods=["GET"])
-def generate_new_unsolved_sudoku():
-    """Generate a new unsolved sudoku puzzle"""
-    difficulty = request.args.get("difficulty", "easy").lower()
-    global current_sudoku
-    current_sudoku = generate_unsolved_sudoku(difficulty)
-    return jsonify(current_sudoku)
+sudoku_state = SudokuState()
 
 
 @sudoku_bp.route("/current_sudoku", methods=["GET"])
 def get_current_sudoku():
-    """Get the current sudoku puzzle"""
-    return jsonify(current_sudoku)
+    """Return the current Sudoku puzzle."""
+    return jsonify(sudoku_state.get_puzzle())
+
+
+@sudoku_bp.route("/sudoku_solution", methods=["GET"])
+def get_sudoku_solution():
+    """Return the solution of the current Sudoku puzzle."""
+    return jsonify(sudoku_state.get_solution())
+
+
+@sudoku_bp.route("/generate_new_sudoku", methods=["GET"])
+def generate_new_unsolved_sudoku():
+    """Generate a new Sudoku puzzle based on difficulty."""
+    difficulty = request.args.get("difficulty", "easy").lower()
+    sudoku_state.generate_new(difficulty)
+    return jsonify(sudoku_state.get_puzzle())
