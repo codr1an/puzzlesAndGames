@@ -4,8 +4,8 @@ from flask import Blueprint, jsonify, request
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from chess.eight_queens_model import solve_queens
-from chess.eight_queens_random_solution_generator import get_random_solution
+from Chess.eight_queens_model import solve_queens
+from Chess.eight_queens_random_solution_generator import get_random_solution
 
 queens_bp = Blueprint("queens", __name__)
 

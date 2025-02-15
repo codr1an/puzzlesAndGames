@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
-from sudoku.sudoku_generator import generate_sudoku
-from sudoku.sudoku_difficulty_setter import remove_numbers
-from sudoku.sudoku_model import solve_sudoku
+from Sudoku.sudoku_generator import generate_sudoku
+from Sudoku.sudoku_difficulty_setter import remove_numbers
+from Sudoku.sudoku_model import solve_sudoku
 
 sudoku_bp = Blueprint("sudoku", __name__)
 

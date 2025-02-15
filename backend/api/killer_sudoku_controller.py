@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify
 
-from sudoku.sudoku_generator import generate_sudoku
-from sudoku.killer_sudoku_generator import generate_cages
-from sudoku.killer_sudoku_model import solve_killer_sudoku
+from Sudoku.sudoku_generator import generate_sudoku
+from Sudoku.killer_sudoku_generator import generate_cages
+from Sudoku.killer_sudoku_model import solve_killer_sudoku
 
 killer_sudoku_bp = Blueprint("killer_sudoku", __name__)
 

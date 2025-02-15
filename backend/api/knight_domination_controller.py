@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from chess.knight_domination_model import solve_knights
+from Chess.knight_domination_model import solve_knights
 
 knights_bp = Blueprint("knights", __name__)
 
