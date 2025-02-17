@@ -14,11 +14,8 @@ const SudokuControls = ({
 
   return (
     <div className="sudoku-buttons-container">
-      {isSolved && (
-        <div className="sudoku-solved-message">
-          <h1>Sudoku solved!</h1>
-        </div>
-      )}
+      <div className="sudoku-info">{isSolved && <h3>Sudoku solved</h3>}</div>
+
       <div className="sudoku-numbers-buttons">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
           <button

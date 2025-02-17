@@ -1,8 +1,9 @@
 from ortools.sat.python import cp_model
 
 
-def solve_killer_sudoku(cages, n=3):
-    N = n * n  # Sudoku grid size
+def solve_killer_sudoku(cages):
+    n = 3
+    N = n * n
     model = cp_model.CpModel()
 
     # Define variables
@@ -28,7 +29,6 @@ def solve_killer_sudoku(cages, n=3):
         cells, total = cage["cage"], cage["sum"]
         variables = [X[i][j] for i, j in cells]
         model.Add(sum(variables) == total)
-        # Do not add AllDifferent here, as numbers may repeat in a cage
 
     # Solve model
     solver = cp_model.CpSolver()

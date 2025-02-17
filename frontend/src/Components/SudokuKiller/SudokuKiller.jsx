@@ -232,7 +232,7 @@ const SudokuKiller = () => {
                 />
                 <button
                   type="button"
-                  className="new-game-button"
+                  class="btn btn-success"
                   onClick={handleNewGame}
                 >
                   <i class="bi bi-plus">New game</i>

@@ -3,11 +3,7 @@ import random
 
 def remove_numbers(grid, difficulty):
     """Removes numbers from the Sudoku grid based on the difficulty."""
-    difficulties = {
-        "easy": 43,
-        "medium": 50,
-        "hard": 56,
-    }
+    difficulties = {"easy": 43, "hard": 50}
 
     cells_to_remove = difficulties.get(difficulty, 36)
     side = len(grid)

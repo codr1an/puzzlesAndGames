@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import "./Sudoku.css";
 import Sidebar from "../Home/Sidebar";
 import SudokuControls from "./SudokuControls";
-import SudokuDifficulty from "./SudokuDifficulty";
 
 const Sudoku = () => {
   const [board, setBoard] = useState([]);
@@ -249,9 +248,39 @@ const Sudoku = () => {
         <Sidebar />
         <div className="sudoku-container">
           <div className="sudoku-components-container">
-            <SudokuDifficulty handleDifficultyChange={handleDifficultyChange} />
             <div className="sudoku-controls-container">
-              <div className="sudoku-board-container">{renderBoard(board)}</div>
+              <div className="sudoku-board-container">
+                {renderBoard(board)}
+                <div class="dropdown">
+                  <a
+                    class="btn btn-success dropdown-toggle"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <i class="bi bi-plus">New game</i>
+                  </a>
+
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        onClick={() => handleDifficultyChange("easy")}
+                      >
+                        Easy
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        class="dropdown-item"
+                        onClick={() => handleDifficultyChange("hard")}
+                      >
+                        Hard
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
               <SudokuControls
                 handleUndo={handleUndo}
                 handleDelete={handleDelete}
