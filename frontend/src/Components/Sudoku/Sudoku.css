@@ -109,11 +109,11 @@
 }
 
 .sudoku-cell:focus {
-  background-color: rgba(25, 135, 84, 0.555) !important;
+  background-color: rgba(25, 135, 84, 0.342) !important;
 }
 
 .sudoku-cell.value-highlight {
-  background-color: rgba(25, 135, 84, 0.555);
+  background-color: rgba(25, 135, 84, 0.342);
 }
 
 .sudoku-cell:nth-child(3n + 1) {
@@ -132,7 +132,7 @@
   border-right: 1px solid black;
 }
 .sudoku-cell.user-added {
-  color: rgb(50, 90, 175);
+  color: rgb(44, 128, 88);
 }
 
 .sudoku-actions-buttons {
@@ -232,4 +232,13 @@
 
 .new-game-dropdown {
   background-color: rgb(240, 240, 240);
+}
+
+.dropdown-menu {
+  width: 100%;
+  min-width: 0;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(25, 135, 84, 0.479);
 }

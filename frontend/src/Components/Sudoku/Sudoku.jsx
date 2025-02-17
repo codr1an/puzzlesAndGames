@@ -16,7 +16,7 @@ const Sudoku = () => {
   const [isSolved, setIsSolved] = useState(false);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/current_sudoku")
+    fetch("http://127.0.0.1:5000/api/sudokus/current")
       .then((response) => response.json())
       .then((data) => {
         setBoard(data);
@@ -26,7 +26,7 @@ const Sudoku = () => {
         );
         setEditableCells(initialEditableCells);
 
-        fetch("http://127.0.0.1:5000/api/sudoku_solution")
+        fetch("http://127.0.0.1:5000/api/sudokus/current/solution")
           .then((response) => response.json())
           .then((solutionData) => setSolution(solutionData))
           .catch((error) =>
@@ -165,9 +165,13 @@ const Sudoku = () => {
     setHintCells([]);
     setIsSolved(false);
 
-    fetch(
-      `http://127.0.0.1:5000/api/generate_new_sudoku?difficulty=${difficulty}`
-    )
+    fetch("http://127.0.0.1:5000/api/sudokus", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ difficulty: difficulty }),
+    })
       .then((response) => response.json())
       .then((data) => {
         setBoard(data);
@@ -175,7 +179,7 @@ const Sudoku = () => {
         const newSudokuCells = data.map((row) => row.map((cell) => cell === 0));
         setEditableCells(newSudokuCells);
 
-        fetch("http://127.0.0.1:5000/api/sudoku_solution")
+        fetch("http://127.0.0.1:5000/api/sudokus/current/solution")
           .then((response) => response.json())
           .then((solutionData) => setSolution(solutionData))
           .catch((error) =>

@@ -33,89 +33,50 @@ const QueenPlacement = () => {
   };
 
   const solvePuzzle = async () => {
-    if (board.flat().every((cell) => cell === 0)) {
-      setInfoMessage("Generating solution...");
+    setInfoMessage("Fetching solution...");
 
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:5000/api/random_queens_solution"
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch solution");
-        }
+    try {
+      const response = await fetch("http://127.0.0.1:5000/api/queens/solve", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ board }),
+      });
 
-        const solutionText = await response.json();
-        const parsedSolution = JSON.parse(solutionText);
-        setBoard(parsedSolution);
-
-        const movesArray = [];
-        const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
-
-        parsedSolution.forEach((row, rowIndex) => {
-          row.forEach((cell, colIndex) => {
-            if (cell === 1) {
-              const chessNotation = `Q${files[colIndex]}${8 - rowIndex}`;
-              movesArray.push(chessNotation);
-            }
-          });
-        });
-
-        setMoves(movesArray.join(", "));
-        setAttackedSquares(getAttackedSquaresForQueens());
-
-        setInfoMessage("Solution found");
-      } catch (error) {
-        console.error("Error fetching solution:", error);
-        setInfoMessage("Failed to generate solution");
+      if (!response.ok) {
+        throw new Error("Failed to fetch solution");
       }
-    } else {
-      setInfoMessage("Checking current board...");
 
-      try {
-        const response = await fetch(
-          "http://127.0.0.1:5000/api/eight_queens_solution",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ board }),
+      const solutionText = await response.json();
+
+      if (!solutionText) {
+        setInfoMessage("No solution found for current board");
+        return;
+      }
+
+      const parsedSolution = JSON.parse(solutionText);
+      setBoard(parsedSolution);
+
+      const movesArray = [];
+      const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
+
+      parsedSolution.forEach((row, rowIndex) => {
+        row.forEach((cell, colIndex) => {
+          if (cell === 1) {
+            const chessNotation = `Q${files[colIndex]}${8 - rowIndex}`;
+            movesArray.push(chessNotation);
           }
-        );
+        });
+      });
 
-        if (!response.ok) {
-          throw new Error("Failed to fetch solution");
-        }
+      setMoves(movesArray.join(", "));
+      setAttackedSquares(getAttackedSquaresForQueens());
 
-        const solutionText = await response.json();
-
-        if (solutionText === null) {
-          setInfoMessage("No solution found for current board");
-        } else {
-          const parsedSolution = JSON.parse(solutionText);
-          setBoard(parsedSolution);
-
-          const movesArray = [];
-          const files = ["a", "b", "c", "d", "e", "f", "g", "h"];
-
-          parsedSolution.forEach((row, rowIndex) => {
-            row.forEach((cell, colIndex) => {
-              if (cell === 1) {
-                const chessNotation = `Q${files[colIndex]}${8 - rowIndex}`;
-                movesArray.push(chessNotation);
-              }
-            });
-          });
-
-          setMoves(movesArray.join(", "));
-          setAttackedSquares(getAttackedSquaresForQueens());
-
-          setInfoMessage("Solution found");
-        }
-      } catch (error) {
-        console.error("Error fetching solution:", error);
-        setInfoMessage("Failed to generate solution");
-      }
+      setInfoMessage("Solution found");
+    } catch (error) {
+      console.error("Error fetching solution:", error);
+      setInfoMessage("Failed to generate solution");
     }
   };
 

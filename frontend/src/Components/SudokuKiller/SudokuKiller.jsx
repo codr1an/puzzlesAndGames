@@ -24,7 +24,7 @@ const SudokuKiller = () => {
         .map(() => Array(9).fill(true))
     );
 
-    fetch("http://127.0.0.1:5000/api/killer_sudoku")
+    fetch("http://127.0.0.1:5000/api/killers/current")
       .then((response) => response.json())
       .then((data) => {
         setCages(data);
@@ -43,7 +43,7 @@ const SudokuKiller = () => {
       [0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]);
 
-    fetch("http://127.0.0.1:5000/api/killer_sudoku_solution")
+    fetch("http://127.0.0.1:5000/api/killers/current/solution")
       .then((response) => response.json())
       .then((solutionData) => setSolution(solutionData))
       .catch((error) =>
@@ -186,12 +186,14 @@ const SudokuKiller = () => {
     setHintCells([]);
     setIsSolved(false);
 
-    fetch("http://127.0.0.1:5000/api/generate_new_killer_sudoku")
+    fetch("http://127.0.0.1:5000/api/killers", {
+      method: "POST",
+    })
       .then((response) => response.json())
       .then((data) => {
         setCages(data);
 
-        return fetch("http://127.0.0.1:5000/api/killer_sudoku_solution");
+        return fetch("http://127.0.0.1:5000/api/killers/current/solution");
       })
       .then((response) => response.json())
       .then((solutionData) => setSolution(solutionData))

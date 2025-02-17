@@ -46,16 +46,13 @@ const KnightDomination = () => {
     setInfoMessage("Generating solution...");
 
     try {
-      const response = await fetch(
-        "http://127.0.0.1:5000/api/solve_knight_domination",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ board }),
-        }
-      );
+      const response = await fetch("http://127.0.0.1:5000/api/knights/solve", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ board }),
+      });
 
       if (!response.ok) {
         throw new Error("Failed to fetch solution");
