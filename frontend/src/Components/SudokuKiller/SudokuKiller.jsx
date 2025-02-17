@@ -31,21 +31,16 @@ const SudokuKiller = () => {
       })
       .catch((error) => console.error("Error fetching data:", error));
 
-    setBoard([
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ]);
-
     fetch("http://127.0.0.1:5000/api/killers/current/solution")
       .then((response) => response.json())
       .then((solutionData) => setSolution(solutionData))
+      .catch((error) =>
+        console.error("Error fetching Sudoku solution:", error)
+      );
+
+    fetch("http://127.0.0.1:5000/api/killers/user_inputs")
+      .then((response) => response.json())
+      .then((board) => setBoard(board))
       .catch((error) =>
         console.error("Error fetching Sudoku solution:", error)
       );
@@ -72,6 +67,7 @@ const SudokuKiller = () => {
         setBoard(newBoard);
       }
     }
+    handleUpdateBoard();
   };
 
   const handleFocus = (rowIndex, colIndex) => {
@@ -107,6 +103,7 @@ const SudokuKiller = () => {
           cellElement.classList.add("incorrect");
         } else {
           cellElement.classList.remove("incorrect");
+          handleUpdateBoard();
         }
       }
 
@@ -171,6 +168,20 @@ const SudokuKiller = () => {
         checkIfSolved(newBoard);
       }
     }
+  };
+
+  const handleUpdateBoard = () => {
+    fetch("http://127.0.0.1:5000/api/killers", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ board: board }),
+    })
+      .then((response) => response.json())
+      .catch((error) => {
+        console.error("Error fetching Sudoku board:", error);
+      });
   };
 
   const handleSolution = () => {

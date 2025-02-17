@@ -53,6 +53,6 @@ def generate_new_unsolved_sudoku():
 @sudoku_bp.route("/sudokus", methods=["PUT"])
 def update_current_sudoku():
     """Update current sudoku after user input"""
-    grid = request.json.get("grid", [])
+    grid = request.json.get("board", [])
     sudoku_state.update_puzzle(grid)
     return jsonify(sudoku_state.get_puzzle())

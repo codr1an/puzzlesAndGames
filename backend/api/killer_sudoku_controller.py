@@ -18,9 +18,20 @@ class KillerSudokuState:
         self.sudoku = generate_sudoku()
         self.cages = generate_cages(self.sudoku)
         self.solution = solve_killer_sudoku(self.cages)
+        self.updated_sudoku = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ]
 
     def update_puzzle(self, grid):
-        self.sudoku = grid
+        self.updated_sudoku = grid
 
     def get_cages(self):
         return self.cages
@@ -28,8 +39,18 @@ class KillerSudokuState:
     def get_solution(self):
         return self.solution
 
+    def get_puzzle(self):
+        self.updated_sudoku
+        return self.updated_sudoku
+
 
 sudoku_state = KillerSudokuState()
+
+
+@killer_sudoku_bp.route("/killers/user_inputs", methods=["GET"])
+def get_killer_user_inputs():
+    """Return the user unputs."""
+    return jsonify(sudoku_state.get_puzzle())
 
 
 @killer_sudoku_bp.route("/killers/current", methods=["GET"])
@@ -54,6 +75,6 @@ def generate_new_killer_sudoku():
 @killer_sudoku_bp.route("/killers", methods=["PUT"])
 def update_current_sudoku():
     """Update current sudoku after user input"""
-    grid = request.json.get("grid", [])
+    grid = request.json.get("board", [])
     sudoku_state.update_puzzle(grid)
     return jsonify(sudoku_state.get_puzzle())

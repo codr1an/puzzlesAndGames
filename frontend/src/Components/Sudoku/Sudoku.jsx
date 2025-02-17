@@ -59,6 +59,7 @@ const Sudoku = () => {
         setBoard(newBoard);
       }
     }
+    handleUpdateBoard();
   };
 
   const handleFocus = (rowIndex, colIndex) => {
@@ -94,6 +95,7 @@ const Sudoku = () => {
           cellElement.classList.add("incorrect");
         } else {
           cellElement.classList.remove("incorrect");
+          handleUpdateBoard();
         }
       }
 
@@ -186,6 +188,20 @@ const Sudoku = () => {
             console.error("Error fetching Sudoku solution:", error)
           );
       })
+      .catch((error) => {
+        console.error("Error fetching Sudoku board:", error);
+      });
+  };
+
+  const handleUpdateBoard = () => {
+    fetch("http://127.0.0.1:5000/api/sudokus", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ board: board }),
+    })
+      .then((response) => response.json())
       .catch((error) => {
         console.error("Error fetching Sudoku board:", error);
       });
