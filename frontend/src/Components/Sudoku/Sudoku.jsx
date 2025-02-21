@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import "./Sudoku.css";
 import Sidebar from "../Home/Sidebar";
 import SudokuControls from "./SudokuControls";
+import { getSudoku } from "sudoku-gen";
+import SudokuDifficultyDropdown from "./SudokuDifficultyDropdown";
 
 const Sudoku = () => {
   const [board, setBoard] = useState([]);
@@ -16,27 +18,47 @@ const Sudoku = () => {
   const [isSolved, setIsSolved] = useState(false);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/sudokus/current")
-      .then((response) => response.json())
-      .then((data) => {
-        setBoard(data);
+    const savedBoard = localStorage.getItem("sudokuBoard");
+    const savedEditableCells = localStorage.getItem("editableCells");
+    const savedSolution = localStorage.getItem("sudokuSolution");
 
-        const initialEditableCells = data.map((row) =>
-          row.map((cell) => cell === 0)
-        );
-        setEditableCells(initialEditableCells);
-
-        fetch("http://127.0.0.1:5000/api/sudokus/current/solution")
-          .then((response) => response.json())
-          .then((solutionData) => setSolution(solutionData))
-          .catch((error) =>
-            console.error("Error fetching Sudoku solution:", error)
-          );
-      })
-      .catch((error) => {
-        console.error("Error fetching Sudoku board:", error);
-      });
+    if (savedBoard && savedEditableCells && savedSolution) {
+      setBoard(JSON.parse(savedBoard));
+      setEditableCells(JSON.parse(savedEditableCells));
+      setSolution(JSON.parse(savedSolution));
+    } else {
+      generateNewSudoku("easy");
+    }
   }, []);
+
+  useEffect(() => {
+    if (board.length > 0 && solution) {
+      localStorage.setItem("sudokuBoard", JSON.stringify(board));
+      localStorage.setItem("editableCells", JSON.stringify(editableCells));
+      localStorage.setItem("sudokuSolution", JSON.stringify(solution));
+    }
+  }, [board, editableCells, solution]);
+
+  const convertToGrid = (str) => {
+    return str.match(/.{1,9}/g).map((row) => row.split(""));
+  };
+
+  const generateNewSudoku = (difficulty) => {
+    const sudoku = getSudoku(difficulty);
+    const formattedPuzzle = convertToGrid(sudoku.puzzle).map((row) =>
+      row.map((cell) => (cell === "-" ? 0 : parseInt(cell, 10)))
+    );
+    const formattedSolution = convertToGrid(sudoku.solution).map((row) =>
+      row.map((cell) => parseInt(cell, 10))
+    );
+    setBoard(formattedPuzzle);
+    setSolution(formattedSolution);
+    setEditableCells(
+      formattedPuzzle.map((row) => row.map((cell) => cell === 0))
+    );
+    setHintCells([]);
+    setIsSolved(false);
+  };
 
   const handleHint = () => {
     if (solution) {
@@ -59,7 +81,6 @@ const Sudoku = () => {
         setBoard(newBoard);
       }
     }
-    handleUpdateBoard();
   };
 
   const handleFocus = (rowIndex, colIndex) => {
@@ -93,9 +114,6 @@ const Sudoku = () => {
         const cellElement = event.target;
         if (!isCorrect) {
           cellElement.classList.add("incorrect");
-        } else {
-          cellElement.classList.remove("incorrect");
-          handleUpdateBoard();
         }
       }
 
@@ -161,57 +179,44 @@ const Sudoku = () => {
     }
   };
 
-  const handleDifficultyChange = (difficulty) => {
-    setSolution(null);
-    setHintCell(null);
-    setHintCells([]);
-    setIsSolved(false);
+  // delete number with backspace
+  useEffect(() => {
+    const handleBackspace = (event) => {
+      if (event.key === "Backspace") {
+        handleDelete();
+      }
+    };
+    window.addEventListener("keydown", handleBackspace);
+    return () => {
+      window.removeEventListener("keydown", handleBackspace);
+    };
+  }, [highlightedCell]);
+
+  const handleSolution = () => {
+    const updatedBoard = board.map((row, rowIndex) =>
+      row.map((cell, colIndex) => {
+        if (cell !== 0 && solution[rowIndex][colIndex] !== cell) {
+          return 0;
+        }
+        return cell;
+      })
+    );
 
     fetch("http://127.0.0.1:5000/api/sudokus", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ difficulty: difficulty }),
+      body: JSON.stringify({ board: updatedBoard }),
     })
       .then((response) => response.json())
+      .then(setIsSolved(true))
       .then((data) => {
         setBoard(data);
-
-        const newSudokuCells = data.map((row) => row.map((cell) => cell === 0));
-        setEditableCells(newSudokuCells);
-
-        fetch("http://127.0.0.1:5000/api/sudokus/current/solution")
-          .then((response) => response.json())
-          .then((solutionData) => setSolution(solutionData))
-          .catch((error) =>
-            console.error("Error fetching Sudoku solution:", error)
-          );
       })
-      .catch((error) => {
-        console.error("Error fetching Sudoku board:", error);
-      });
-  };
-
-  const handleUpdateBoard = () => {
-    fetch("http://127.0.0.1:5000/api/sudokus", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ board: board }),
-    })
-      .then((response) => response.json())
-      .catch((error) => {
-        console.error("Error fetching Sudoku board:", error);
-      });
-  };
-
-  const handleSolution = () => {
-    if (solution) {
-      setBoard(solution);
-      setIsSolved(true);
-    }
+      .catch((error) =>
+        console.error("Error fetching Sudoku solution:", error)
+      );
   };
 
   const renderBoard = (board) => {
@@ -271,35 +276,9 @@ const Sudoku = () => {
             <div className="sudoku-controls-container">
               <div className="sudoku-board-container">
                 {renderBoard(board)}
-                <div class="dropdown">
-                  <a
-                    class="btn btn-success dropdown-toggle"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <i class="bi bi-plus">New game</i>
-                  </a>
-
-                  <ul class="dropdown-menu">
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        onClick={() => handleDifficultyChange("easy")}
-                      >
-                        Easy
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item"
-                        onClick={() => handleDifficultyChange("hard")}
-                      >
-                        Hard
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                <SudokuDifficultyDropdown
+                  generateNewSudoku={generateNewSudoku}
+                />
               </div>
               <SudokuControls
                 handleUndo={handleUndo}
