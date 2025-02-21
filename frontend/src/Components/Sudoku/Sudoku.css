@@ -207,16 +207,12 @@
   background-color: rgb(240, 240, 240);
 }
 
-.new-game-dropdown {
-  background-color: rgb(240, 240, 240);
-}
-
 .dropdown-menu {
-  width: 100%;
-  min-width: 0;
-  font-size: medium;
+  width: 100% !important;
+  min-width: 0 !important;
+  font-size: medium !important;
 }
 
 .dropdown-item:hover {
-  background-color: rgba(25, 135, 84, 0.479);
+  background-color: rgba(25, 135, 84, 0.479) !important;
 }

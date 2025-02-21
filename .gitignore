@@ -10,6 +10,7 @@
 
 # production
 /build
+local_prototypes
 
 # misc
 .DS_Store

@@ -26,11 +26,6 @@ const SudokuDifficultyDropdown = ({ generateNewSudoku }) => {
             Hard
           </a>
         </li>
-        <li>
-          <a class="dropdown-item" onClick={() => generateNewSudoku("expert")}>
-            Expert
-          </a>
-        </li>
       </ul>
     </div>
   );
