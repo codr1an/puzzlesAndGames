@@ -24,8 +24,37 @@ const SudokuKiller = () => {
         .fill()
         .map(() => Array(9).fill(true))
     );
-    generateNewGame();
+    const killerSudokuBoard = localStorage.getItem("killerSudokuBoard");
+    const killerEditableCells = localStorage.getItem("killerEditableCells");
+    const killerSavedSolution = localStorage.getItem("killerSavedSolution");
+    const cages = localStorage.getItem("cages");
+
+    if (
+      killerSudokuBoard &&
+      killerEditableCells &&
+      killerSavedSolution &&
+      cages
+    ) {
+      setBoard(JSON.parse(killerSudokuBoard));
+      setEditableCells(JSON.parse(killerEditableCells));
+      setSolution(JSON.parse(killerSavedSolution));
+      setCages(JSON.parse(cages));
+    } else {
+      generateNewGame();
+    }
   }, []);
+
+  useEffect(() => {
+    if (board.length > 0 && solution) {
+      localStorage.setItem("killerSudokuBoard", JSON.stringify(board));
+      localStorage.setItem(
+        "killerEditableCells",
+        JSON.stringify(editableCells)
+      );
+      localStorage.setItem("killerSavedSolution", JSON.stringify(solution));
+      localStorage.setItem("cages", JSON.stringify(cages));
+    }
+  }, [board, editableCells, solution]);
 
   const generateNewGame = () => {
     setSolution(null);
@@ -68,20 +97,22 @@ const SudokuKiller = () => {
   };
 
   const fetchSolutionsCount = () => {
-    fetch("http://127.0.0.1:5000/api/killers/solutions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ cages: cages }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSolutionsCount(data);
+    if (cages) {
+      fetch("http://127.0.0.1:5000/api/killers/solutions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cages: cages }),
       })
-      .catch((error) =>
-        console.error("Error fetching Sudoku solution:", error)
-      );
+        .then((response) => response.json())
+        .then((data) => {
+          setSolutionsCount(data);
+        })
+        .catch((error) =>
+          console.error("Error fetching Sudoku solution:", error)
+        );
+    }
   };
 
   const handleHint = () => {
