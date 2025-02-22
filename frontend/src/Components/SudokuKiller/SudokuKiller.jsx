@@ -16,6 +16,7 @@ const SudokuKiller = () => {
   const [hintCells, setHintCells] = useState([]);
   const [isSolved, setIsSolved] = useState(false);
   const [cages, setCages] = useState([]);
+  const [solutionsCount, setSolutionsCount] = useState(null);
 
   useEffect(() => {
     setEditableCells(
@@ -23,28 +24,65 @@ const SudokuKiller = () => {
         .fill()
         .map(() => Array(9).fill(true))
     );
+    generateNewGame();
+  }, []);
 
-    fetch("http://127.0.0.1:5000/api/killers/current")
+  const generateNewGame = () => {
+    setSolution(null);
+    setHintCell(null);
+    setHintCells([]);
+    setIsSolved(false);
+    setSolutionsCount(null);
+
+    fetch("http://127.0.0.1:5000/api/killers", {
+      method: "GET",
+    })
       .then((response) => response.json())
       .then((data) => {
         setCages(data);
-      })
-      .catch((error) => console.error("Error fetching data:", error));
 
-    fetch("http://127.0.0.1:5000/api/killers/current/solution")
+        return fetch("http://127.0.0.1:5000/api/killers/solution", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ cages: data }),
+        });
+      })
       .then((response) => response.json())
       .then((solutionData) => setSolution(solutionData))
-      .catch((error) =>
-        console.error("Error fetching Sudoku solution:", error)
-      );
+      .catch((error) => console.error("Error fetching data:", error));
 
-    fetch("http://127.0.0.1:5000/api/killers/user_inputs")
+    fetchSolutionsCount();
+    setBoard([
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]);
+  };
+
+  const fetchSolutionsCount = () => {
+    fetch("http://127.0.0.1:5000/api/killers/solutions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ cages: cages }),
+    })
       .then((response) => response.json())
-      .then((board) => setBoard(board))
+      .then((data) => {
+        setSolutionsCount(data);
+      })
       .catch((error) =>
         console.error("Error fetching Sudoku solution:", error)
       );
-  }, []);
+  };
 
   const handleHint = () => {
     if (solution) {
@@ -67,7 +105,6 @@ const SudokuKiller = () => {
         setBoard(newBoard);
       }
     }
-    handleUpdateBoard();
   };
 
   const handleFocus = (rowIndex, colIndex) => {
@@ -101,9 +138,6 @@ const SudokuKiller = () => {
         const cellElement = event.target;
         if (!isCorrect) {
           cellElement.classList.add("incorrect");
-        } else {
-          cellElement.classList.remove("incorrect");
-          handleUpdateBoard();
         }
       }
 
@@ -170,57 +204,11 @@ const SudokuKiller = () => {
     }
   };
 
-  const handleUpdateBoard = () => {
-    fetch("http://127.0.0.1:5000/api/killers", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ board: board }),
-    })
-      .then((response) => response.json())
-      .catch((error) => {
-        console.error("Error fetching Sudoku board:", error);
-      });
-  };
-
   const handleSolution = () => {
     if (solution) {
       setBoard(solution);
       setIsSolved(true);
     }
-  };
-
-  const handleNewGame = () => {
-    setSolution(null);
-    setHintCell(null);
-    setHintCells([]);
-    setIsSolved(false);
-
-    fetch("http://127.0.0.1:5000/api/killers", {
-      method: "POST",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setCages(data);
-
-        return fetch("http://127.0.0.1:5000/api/killers/current/solution");
-      })
-      .then((response) => response.json())
-      .then((solutionData) => setSolution(solutionData))
-      .catch((error) => console.error("Error fetching data:", error));
-
-    setBoard([
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ]);
   };
 
   return (
@@ -246,7 +234,7 @@ const SudokuKiller = () => {
                 <button
                   type="button"
                   class="btn btn-success"
-                  onClick={handleNewGame}
+                  onClick={generateNewGame}
                 >
                   <i class="bi bi-plus">New game</i>
                 </button>
@@ -260,6 +248,7 @@ const SudokuKiller = () => {
                 setPreventBlur={setPreventBlur}
                 handleHint={handleHint}
                 isSolved={isSolved}
+                solutionsCount={solutionsCount}
               />
             </div>
           </div>

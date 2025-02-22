@@ -8,13 +8,19 @@ const SudokuControls = ({
   setPreventBlur,
   handleHint,
   isSolved,
+  solutionsCount,
 }) => {
   const handleMouseDown = () => setPreventBlur(true);
   const handleMouseUp = () => setPreventBlur(false);
 
   return (
     <div className="sudoku-buttons-container">
-      <div className="sudoku-info">{isSolved && <h3>Sudoku solved</h3>}</div>
+      <div className="sudoku-info">
+        {isSolved && <h3>Sudoku solved</h3>}
+        {solutionsCount && isSolved && (
+          <h4>This board has {solutionsCount} solutions</h4>
+        )}
+      </div>
 
       <div className="sudoku-numbers-buttons">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
