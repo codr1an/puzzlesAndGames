@@ -38,11 +38,6 @@ def generate_all_killer_solutions(cages):
         solution = [[solver.Value(X[i][j]) for j in range(N)] for i in range(N)]
         solutions.append(solution)
 
-        print(f"Solution {len(solutions)}:")
-        for row in solution:
-            print(row)
-        print()
-
         # no-good constraint to exclude already found solutions
         no_good_constraint = []
         for i in range(N):

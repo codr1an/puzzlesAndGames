@@ -3,7 +3,6 @@ from ortools.linear_solver import pywraplp
 
 
 def solve_queens(board):
-    print(type(board))
     N = 8
     solver = pywraplp.Solver.CreateSolver("SCIP")
     if not solver:

@@ -6,8 +6,6 @@ def solve_knights(board):
     N = 8
 
     solver = pywraplp.Solver.CreateSolver("SCIP")
-    if not solver:
-        return None
 
     # Decision variables: X[i][j] = 1 if a knight is placed at (i, j), otherwise 0
     X = [[solver.IntVar(0, 1, f"X[{i},{j}]") for j in range(N)] for i in range(N)]

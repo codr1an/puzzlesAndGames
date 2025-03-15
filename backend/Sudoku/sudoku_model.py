@@ -1,9 +1,6 @@
 from ortools.sat.python import cp_model
 
 
-# TODO: check falls losung eindutig
-# additional constraint that forbids first solution
-# no-good S. 115
 def solve_sudoku(grid):
     n = 3
     N = n * n
