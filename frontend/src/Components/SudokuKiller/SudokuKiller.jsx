@@ -279,7 +279,6 @@ const SudokuKiller = () => {
                 setPreventBlur={setPreventBlur}
                 handleHint={handleHint}
                 isSolved={isSolved}
-                solutionsCount={solutionsCount}
               />
             </div>
           </div>

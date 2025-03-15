@@ -11,7 +11,12 @@ killer_sudoku_bp = Blueprint("killer_sudoku", __name__)
 @killer_sudoku_bp.route("/killers", methods=["GET"])
 def get_killer_sudoku():
     """Generate a new Killer Sudoku"""
-    return jsonify(generate_cages(generate_sudoku()))
+    while True:
+        sudoku = generate_sudoku()
+        cages = generate_cages(sudoku)
+        solutions = generate_all_killer_solutions(cages)
+        if solutions == 1:
+            return jsonify(cages)
 
 
 @killer_sudoku_bp.route("/killers/solution", methods=["POST"])
