@@ -8,8 +8,7 @@ The task is to formulate one or more games from [1] mathematically as an optimiz
 
 Main Literatures:
 
-- **_Tony Hürlimann, Puzzles and Games, A Mathematical Approach_**
-- https://link.springer.com/book/10.1007/978-3-662-67381-2
+- **_Tony Hürlimann, Puzzles and Games, A Mathematical Approach_** [https://link.springer.com/book/10.1007/978-3-662-67381-2]
 
 ## Frontend
 
@@ -22,9 +21,3 @@ Documentation: https://react.dev/ | https://getbootstrap.com/
 The backend will be developed in Python using Flask for the API
 
 Documentation: https://flask.palletsprojects.com/en/3.0.x/
-
-## Database (?)
-
-If needed, the database will be MariaDB hosted locally through XAMPP.
-
-Documentation: https://www.apachefriends.org/docs/
