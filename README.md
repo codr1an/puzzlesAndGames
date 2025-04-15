@@ -29,7 +29,7 @@ The objective of this project is to mathematically model and solve various puzzl
 Clone the Repository
 
 ```bash
-git clone https://github.com/puzzlesAndGames.git
+git clone https://github.com/codr1an/puzzlesAndGames.git
 ```
 
 Navigate into it
