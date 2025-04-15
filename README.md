@@ -1,23 +1,79 @@
-# Puzzles and Games using mixed-integer optimization
+# Puzzles and Games Using Mixed-Integer Programming and Constraint Programming
 
-Research Project for College
+## Thesis
 
-## Task
+The objective of this project is to mathematically model and solve various puzzles and games using optimization techniques such as Mixed-Integer Programming (MIP) and Constraint Programming (CP), and to integrate these models into a fully functional, browser-based application with an interactive user interface. The selected puzzles and games are taken from the book _**Puzzles and Games, A Mathematical Approach by Tony Hürlimann**_ ([SpringerLink](https://link.springer.com/book/10.1007/978-3-662-67381-2)).
 
-The task is to formulate one or more games from [1] mathematically as an optimization model, implement it, and embed it in a fully functional browser-based application.
+## Selected Puzzles and Games
 
-Main Literatures:
+1. **Classic Sudoku**  
+   A logic puzzle where the goal is to fill a 9×9 grid so that each column, row, and 3×3 subgrid contains all digits from 1 to 9 exactly once. Implemented using Constraint Programming via Google OR-Tools.
 
-- **_Tony Hürlimann, Puzzles and Games, A Mathematical Approach_** [https://link.springer.com/book/10.1007/978-3-662-67381-2]
+2. **Killer Sudoku**  
+   A more complex variant of Sudoku where groups of cells ("cages") must sum to specific values without repeating digits. The solver incorporates both classic and cage-specific constraints.
 
-## Frontend
+3. **N-Queens Problem**  
+   Place N queens on an N×N chessboard so that no two queens threaten each other. This puzzle demonstrates constraint satisfaction in a combinatorial optimization context.
 
-The frontend will be developed in React with Bootstrap
+4. **Knight Domination**  
+   Determine the minimum number of knights required on a chessboard such that every square is either occupied by a knight or attacked by one. This problem highlights strategic domination using discrete optimization.
 
-Documentation: https://react.dev/ | https://getbootstrap.com/
+## Technologies Used
 
-## Backend
+- **Frontend**: React and Bootstrap
+- **Backend**: Python with Flask
+- **Optimization Models**: [Google OR-Tools](https://developers.google.com/optimization) using **CP-SAT** and **SCIP** solvers
 
-The backend will be developed in Python using Flask for the API
+## Setup Instructions
 
-Documentation: https://flask.palletsprojects.com/en/3.0.x/
+Clone the Repository
+
+```bash
+git clone https://github.com/puzzlesAndGames.git
+```
+
+Navigate into it
+
+```bash
+cd puzzlesAndGames
+```
+
+### Backend
+
+Install the necessary Python libraries. Depending on your operating system, your pip command may differ. For example, use `py -m pip` on Windows instead of `python -m pip`.
+
+```bash
+python -m pip install ortools flask flask-cors
+```
+
+Start the backend API:
+
+```bash
+python backend/api/puzzles_and_games_api.py
+```
+
+### Frontend
+
+Since the frontend is developed in React, you first need to install [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+
+Then, in a new terminal, navigate to the frontend directory:
+
+```bash
+cd frontend
+```
+
+If this is your first time running the frontend, install the required modules:
+
+```bash
+npm install
+```
+
+Start the frontend:
+
+```bash
+npm start
+```
+
+A new window should automatically open in your browser. If it doesn't, you can manually access the app by navigating to http://localhost:3000.
+
+To stop the app, press `Ctrl+C` in each terminal window or simply close them.
